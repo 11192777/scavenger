@@ -4,3 +4,4 @@ redis~=3.5.3
 
 requests~=2.27.1
 jsonpath~=0.82
+html-testRunner~=1.2.1
