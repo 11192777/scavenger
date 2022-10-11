@@ -1,0 +1,2 @@
+class SqlAdapterServer:
+    pass
