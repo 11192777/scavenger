@@ -8,9 +8,14 @@ app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
 
 
-@app.route("/field_template/sql", methods=["get"])
+@app.route("/field_template/sql/mysql", methods=["get"])
 def field_template_sql():
-    field_template = FieldTemplate(content=request.data.decode('utf-8'))
+    field_template = FieldTemplate(content=request.data.decode('utf-8'), db_type="MYSQL")
+    return field_template.get_sql()
+
+@app.route("/field_template/sql/oracle", methods=["get"])
+def field_template_sql():
+    field_template = FieldTemplate(content=request.data.decode('utf-8'), db_type="ORACLE")
     return field_template.get_sql()
 
 

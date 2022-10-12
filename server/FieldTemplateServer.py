@@ -3,90 +3,97 @@ import logging
 from itertools import groupby
 
 import CommonUtils
+import RandomUtils
 from FormServer import FormServer
-
-
-def get_business_type(business_type):
-    if business_type == "会计档案":
-        return "ACCOUNTANT"
-    elif business_type == "人事档案":
-        return "PERSONNEL"
-    elif business_type == "综合档案":
-        return "GENERAL"
-    else:
-        return None
-
-
-def get_insert_form_sql(id, code, name, business_type):
-    return "INSERT INTO ea_form (id, name, type, code, created_date, last_modified_date, tenant_id, created_by, last_modified_by, business_type) VALUES " \
-           "('{}', '{}', 'DOCUMENT_TYPE_FIELD_TEMPLATE', '{}', NOW(), NOW(), '-1', '-1', '-1', '{}');\n".format(id, name, code, business_type)
-
-
-def get_field_widget_type(widget_type):
-    widget_type = widget_type.strip()
-    if widget_type == "文本":
-        return "TEXT"
-    elif widget_type == "文本数组":
-        return "TEXT_ARRAY"
-    elif widget_type == "整数":
-        return "INTEGER"
-    elif widget_type == "布尔":
-        return "BOOLEAN"
-    elif widget_type == "浮点数":
-        return "DOUBLE"
-    elif widget_type == "日期":
-        return "DATE"
-    elif widget_type == "超链接":
-        return "HYPERLINK"
-    elif widget_type == "长文本":
-        return "LONG_TEXT"
-    else:
-        return None
-
-
-def get_boolean(value):
-    if value == "是":
-        return "TRUE"
-    else:
-        return "FALSE"
-
-
-def get_field_widget_type_property(field):
-    widget_type = get_field_widget_type(field["类型*"])
-    widget_type_property = {}
-    if widget_type == "TEXT" or widget_type == "HYPERLINK" or widget_type == "LONG_TEXT":
-        widget_type_property = {"WORDS_LIMIT": field["格式范围"]}
-    elif widget_type == "INTEGER" or widget_type == "DOUBLE":
-        widget_type_property = {"MIN_VALUE": str(field["格式范围"]).split("_")[0], "MAX_VALUE": str(field["格式范围"]).split("_")[1]}
-    elif widget_type == "DATE":
-        widget_type_property = {"DATE_FORMAT": "yyyy-MM-dd", "DATE_FORMAT_WEB": "YYYY-MM-DD"}
-    elif widget_type == "TEXT_ARRAY":
-        widget_type_property = {"ITEM_WORDS_LIMIT": str(field["格式范围"]).split("/")[1], "ITEMS_LIMIT": str(field["格式范围"]).split("/")[0]}
-    else:
-        return None
-    return json.dumps(widget_type_property)
-
-
-def get_form_sql(form_id):
-    return '''DELETE eff.* FROM ea_form ef JOIN ea_form_field eff ON ef.id = eff.form_id
-WHERE ef.id = '{}';  #删除配置字段
-DELETE ef.*  FROM ea_form ef
-WHERE ef.id = '{}';  #删除模板\n'''.format(form_id, form_id, form_id)
-
-
-def get_insert_field_sql(field, form_id, field_sort_number):
-    return "INSERT INTO ea_form_field (name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property) " \
-           "VALUES ('{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', NOW(), NOW(),  '-1', '-1', '{}');\n" \
-        .format(field["字段名称*"], field["字段编码*"], form_id, get_field_widget_type(field["类型*"]), field_sort_number, get_boolean(field["是否必填*"]), get_boolean(field["是否成册主键"]), get_boolean(field["是否支持编辑*"]), str(get_field_widget_type_property(field)).replace(" ", ""))
 
 
 class FieldTemplate:
 
-    def __init__(self, content: str):
+    def __init__(self, content: str, db_type):
         self.fields_by_form = None
         self.content_csv = None
         self.title_csv = None
         self.content = content
+        self.db_type = db_type
+
+    def get_business_type(self, business_type):
+        if business_type == "会计档案":
+            return "ACCOUNTANT"
+        elif business_type == "人事档案":
+            return "PERSONNEL"
+        elif business_type == "综合档案":
+            return "GENERAL"
+        else:
+            return None
+
+    def get_insert_form_sql(self, id, code, name, business_type):
+        return "INSERT INTO ea_form (id, name, type, code, created_date, last_modified_date, tenant_id, created_by, last_modified_by, business_type) VALUES " \
+               "('{}', '{}', 'DOCUMENT_TYPE_FIELD_TEMPLATE', '{}', {}, {}, '-1', '-1', '-1', '{}');\n".format(id, name, code, self.get_now_time(), self.get_now_time(), business_type)
+
+    def get_field_widget_type(self, widget_type):
+        widget_type = widget_type.strip()
+        if widget_type == "文本":
+            return "TEXT"
+        elif widget_type == "文本数组":
+            return "TEXT_ARRAY"
+        elif widget_type == "整数":
+            return "INTEGER"
+        elif widget_type == "布尔":
+            return "BOOLEAN"
+        elif widget_type == "浮点数":
+            return "DOUBLE"
+        elif widget_type == "日期":
+            return "DATE"
+        elif widget_type == "超链接":
+            return "HYPERLINK"
+        elif widget_type == "长文本":
+            return "LONG_TEXT"
+        else:
+            return None
+
+    def get_boolean(self, value):
+        if self.db_type == "MYSQL":
+            if value == "是":
+                return "TRUE"
+            else:
+                return "FALSE"
+        else:
+            if value == "是":
+                return "1"
+            else:
+                return "0"
+
+    def get_field_widget_type_property(self, field):
+        widget_type = self.get_field_widget_type(field["类型*"])
+        widget_type_property = {}
+        if widget_type == "TEXT" or widget_type == "HYPERLINK" or widget_type == "LONG_TEXT":
+            widget_type_property = {"WORDS_LIMIT": field["格式范围"]}
+        elif widget_type == "INTEGER" or widget_type == "DOUBLE":
+            widget_type_property = {"MIN_VALUE": str(field["格式范围"]).split("_")[0], "MAX_VALUE": str(field["格式范围"]).split("_")[1]}
+        elif widget_type == "DATE":
+            widget_type_property = {"DATE_FORMAT": "yyyy-MM-dd", "DATE_FORMAT_WEB": "YYYY-MM-DD"}
+        elif widget_type == "TEXT_ARRAY":
+            widget_type_property = {"ITEM_WORDS_LIMIT": str(field["格式范围"]).split("/")[1], "ITEMS_LIMIT": str(field["格式范围"]).split("/")[0]}
+        else:
+            return None
+        return json.dumps(widget_type_property)
+
+    def get_form_sql(self, form_id):
+        return '''DELETE eff.* FROM ea_form ef JOIN ea_form_field eff ON ef.id = eff.form_id
+    WHERE ef.id = '{}';  #删除配置字段
+    DELETE ef.*  FROM ea_form ef
+    WHERE ef.id = '{}';  #删除模板\n'''.format(form_id, form_id, form_id)
+
+    def get_insert_field_sql(self, field, form_id, field_sort_number):
+        return "INSERT INTO ea_form_field (name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property) " \
+               "VALUES ('{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}');\n" \
+            .format(field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
+
+    def get_now_time(self):
+        if self.db_type == "MYSQL":
+            return "NOW()"
+        else:
+            return "sysdate"
 
     def format_title_csv(self):
         titles = self.content.split('\n')[0]
@@ -120,11 +127,11 @@ class FieldTemplate:
 
         for form, fields in self.format_content():
             sql = sql + "# {}字段模板\n".format(form[1])
-            sql = sql + get_form_sql(form_id)
-            sql = sql + get_insert_form_sql(form_id, form[0], form[1], get_business_type(form[2]))
+            sql = sql + self.get_form_sql(form_id)
+            sql = sql + self.get_insert_form_sql(form_id, form[0], form[1], self.get_business_type(form[2]))
             field_sort_number = 0
             for field in list(fields):
-                sql = sql + get_insert_field_sql(field, form_id, field_sort_number)
+                sql = sql + self.get_insert_field_sql(field, form_id, field_sort_number)
                 field_sort_number = field_sort_number + 1
             form_id = form_id + 1
             sql = sql + "\n\n"
@@ -138,7 +145,7 @@ class FieldTemplate:
     {}("{}", "{}", BusinessEnvironmentEnum.{})'''
         lines = []
         for form, fields in self.format_content():
-            lines.append(line.format(form[1], form[0], form[0], form[1], get_business_type(form[2])))
+            lines.append(line.format(form[1], form[0], form[0], form[1], self.get_business_type(form[2])))
         java = '''package com.huilianyi.earchives.business.enumeration;
 
 import lombok.AllArgsConstructor;
@@ -263,8 +270,8 @@ public enum FieldTemplateEnum {{{};
         for business_env in business_envs:
             logging.info('===> Create archive type. Business env:{}'.format(business_env))
             archive_data = {
-                "code": CommonUtils.print_now_time(),
-                "name": CommonUtils.print_now_time(),
+                "code": RandomUtils.random_time(),
+                "name": RandomUtils.random_time(),
                 "retentionPeriod": "30",
                 "businessType": business_env,
                 "isEnabled": "true",
@@ -279,8 +286,8 @@ public enum FieldTemplateEnum {{{};
             logging.info('===> Field template obtained successfully. {}'.format(field_template_codes))
             for field_template_code in field_template_codes:
                 document_date = {
-                    "code": CommonUtils.print_now_time(),
-                    "name": CommonUtils.print_now_time(),
+                    "code": RandomUtils.random_time(),
+                    "name": RandomUtils.random_time(),
                     "isEnabled": "true",
                     "securityLevelCode": "TOP_SECRET",
                     "parentId": archive_type_id,
