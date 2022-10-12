@@ -9,20 +9,20 @@ app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
 
 
 @app.route("/field_template/sql/mysql", methods=["get"])
-def field_template_sql():
+def field_template_sql_mysql():
     field_template = FieldTemplate(content=request.data.decode('utf-8'), db_type="MYSQL")
-    return field_template.get_sql()
+    return app.response_class(response=field_template.get_sql(), status=200, mimetype='application/txt')
 
 @app.route("/field_template/sql/oracle", methods=["get"])
-def field_template_sql():
+def field_template_sql_oracle():
     field_template = FieldTemplate(content=request.data.decode('utf-8'), db_type="ORACLE")
-    return field_template.get_sql()
+    return app.response_class(response=field_template.get_sql(), status=200, mimetype='application/txt')
 
 
 @app.route("/field_template/java", methods=["get"])
 def field_template_java():
     field_template = FieldTemplate(content=request.data.decode('utf-8'))
-    return field_template.get_java_enum()
+    return app.response_class(response=field_template.get_sql(), status=200, mimetype='application/txt')
 
 
 @app.route("/filed_template/test", methods=["get", "post"])
