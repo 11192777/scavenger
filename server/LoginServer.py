@@ -16,6 +16,7 @@ def private_sit_16660000000():
     res = requests.post(url=url + "/oauth/token", data=data).json()
     return {"token": "Bearer {}".format(res["access_token"]),
             "archive_url": url + "/isg/e-archives",
+            "tenant_id": requests.get(url + "/api/account", headers={"Authorization": "Bearer {}".format(res["access_token"])}).json()["tenantId"],
             "hermes_url": url, "mysql": {
             "host": "hly-uatmask-polardb.mysql.polardb.rds.aliyuncs.com",
             "port": 3306,
@@ -40,6 +41,7 @@ def local_private_sit_16660000000():
     res = requests.post(url=url + "/oauth/token", data=data).json()
     return {"token": "Bearer {}".format(res["access_token"]),
             "archive_url": "http://127.0.0.1:9091/e-archives",
+            "tenant_id": requests.get(url + "/api/account", headers={"Authorization": "Bearer {}".format(res["access_token"])}).json()["tenantId"],
             "hermes_url": url, "mysql": {
             "host": "hly-uatmask-polardb.mysql.polardb.rds.aliyuncs.com",
             "port": 3306,
@@ -64,6 +66,7 @@ def local_private_sit_11192777():
     res = requests.post(url=url + "/oauth/token", data=data).json()
     return {"token": "Bearer {}".format(res["access_token"]),
             "archive_url": "http://127.0.0.1:9091/e-archives",
+            "tenant_id": requests.get(url + "/api/account", headers={"Authorization": "Bearer {}".format(res["access_token"])}).json()["tenantId"],
             "hermes_url": url, "mysql": {
             "host": "hly-uatmask-polardb.mysql.polardb.rds.aliyuncs.com",
             "port": 3306,
