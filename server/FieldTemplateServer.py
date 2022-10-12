@@ -79,10 +79,9 @@ class FieldTemplate:
         return json.dumps(widget_type_property)
 
     def get_form_sql(self, form_id):
-        return '''DELETE eff.* FROM ea_form ef JOIN ea_form_field eff ON ef.id = eff.form_id
-    WHERE ef.id = '{}';  #删除配置字段
-    DELETE ef.*  FROM ea_form ef
-    WHERE ef.id = '{}';  #删除模板\n'''.format(form_id, form_id, form_id)
+        return '''DELETE FROM ea_form WHERE id = '{}';  # 删除模板
+DELETE FROM ea_form_field WHERE form_id = '{}'; # 删除模板字段
+\n'''.format(form_id, form_id)
 
     def get_insert_field_sql(self, field, form_id, field_sort_number):
         return "INSERT INTO ea_form_field (name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property) " \
