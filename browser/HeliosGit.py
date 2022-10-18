@@ -1,40 +1,78 @@
+import os
+import re
 from urllib.parse import urlencode, unquote
 from urllib.parse import urlunparse
 
 import requests
+from lxml import etree
 from requests.cookies import RequestsCookieJar
 
 
+class HeliosGit:
+
+    def __init__(self, path="huilianyi"):
+        self.cookies = RequestsCookieJar()
+        self.info = {}
+        self.path = path
+
+    def access(self):
+        url = "https://code.huilianyi.com/user/login"
+        response = requests.get(url=url)
+        self.cookies.update(response.cookies)
+
+    def login(self):
+        url = "https://code.huilianyi.com/user/login"
+        response = requests.post(url=url, data={"user_name": "qingyu.meng@huilianyi.com", "password": "Qingyu981117"}, cookies=self.cookies, headers={"Content-Type": "application/x-www-form-urlencoded"})
+        self.cookies.update(response.cookies)
+        url = "https://code.huilianyi.com/"
+        response = requests.get(url=url, cookies=self.cookies)
+        self.cookies.update(response.cookies)
+
+    def compare(self):
+        url = "https://code.huilianyi.com/{}/{}/compare/{}...{}:{}".format(self.path, self.info["project_name"], self.info["branch_name"], self.info["user_name"], self.info["branch_name"])
+        print(url)
+        response = requests.get(url=url, cookies=self.cookies)
+        html = etree.HTML(response.text)
+        commits = html.xpath("/html/body/div[@class='full height']/div[@class='repository compare pull diff']/div[@class='ui container']/div[@class='sixteen wide column page grid']/div[@class='ui unstackable attached table segment']/table[@id='commits-table']/tbody/tr")
+        print(commits)
+        for commit in commits:
+            user = commit.xpath("./tr/td[@class='author']")
+            comment = commit.xpath("./tr/td[@class='message collapsing']/span")
+            print("user:{} comment:{}".format(user, comment))
+        return "None"
+
+    def merge(self, title):
+        url = "https://code.huilianyi.com/{}/{}/compare/{}...{}:{}".format(self.path, self.info["project_name"], self.info["branch_name"], self.info["user_name"], self.info["branch_name"])
+        response = requests.post(url=url, data={"title": title, "_csrf": unquote(self.cookies.get("_csrf"))}, cookies=self.cookies, headers={"Content-Type": "application/x-www-form-urlencoded"})
+
+    def run(self):
+        self.access()
+        self.login()
+        self.push_info()
+        self.compare()
+        # self.merge()
+
+    def push_info(self):
+        branch_vv = os.popen("git branch -vv").read().split()[3]
+        remote_name = branch_vv[branch_vv.index("[") + 1:branch_vv.index("/")]
+        self.info["remote_name"] = remote_name
+        branch_name = branch_vv[branch_vv.index("/") + 1:branch_vv.index("]")]
+        self.info["branch_name"] = branch_name
+        remove_v = os.popen("git remote -v")
+        line = remove_v.readline()
+        while line != "":
+            items = line.split()
+            if items[0] == remote_name:
+                target = items[1]
+                project_name = target[target.index("/") + 1:target.rindex(".")]
+                self.info["project_name"] = project_name
+                user_name = target[target.index(":") + 1:target.index("/")]
+                self.info["user_name"] = user_name
+
+                break
+            line = remove_v.readline()
+
+
 if __name__ == '__main__':
-    csrf = "6K3CaQO5936TJgXTipfy36khn106MTY2NTk5NDg0NDAwMDc5MDI0Mg=="
-    cookies = RequestsCookieJar()
-    cookies.set("lang", "zh-CN")
-    cookies.set("Hm_lvt_3c193caea742eb1d364949dfa96cea20", "1661486186,1661525852,1661737666,1663341034")
-    cookies.set("Hm_lvt_343b9b8fc424627f20938ba2a6d10b47", "1661486186,1661525852,1661737666,1663341035")
-    cookies.set("Qs_lvt_337518", "1661418127%2C1661477446%2C1661525853%2C1661737666%2C166334103")
-    cookies.set("Qs_pv_337518", "2299340530736051200%2C865690689348363800%2C442714974431105600%2C978892390697045200%2C169423104547499300")
-    cookies.set("helios_git_lucky", "3c9a8d466d502197")
-    cookies.set("_csrf", "6K3CaQO5936TJgXTipfy36khn106MTY2NTk5NDg0NDAwMDc5MDI0Mg%3D%3D")
-    cookies.set("redirect_to", "%252F")
-
-    data = {
-        "_csrf": csrf,
-        "user_name": "qingyu.meng@huilianyi.com",
-        "password": "Qingyu981117",
-        "remember": "on"
-    }
-    response1 = requests.get("https://code.huilianyi.com/user/login", data=data, headers={"Content-Type": "application/x-www-form-urlencoded"})
-    cookies.update(response1.cookies)
-
-    response2 = requests.get("https://code.huilianyi.com")
-    cookies.update(response2.cookies)
-
-    csrf = "QZQw5K_vNhGyo38USdlR0SB38r06MTY2NjAwMDMxNTgzNjIzMTgzOQ=="
-
-    data = {
-        "_csrf": csrf,
-        "title": "66666"
-    }
-    print(cookies)
-    response3 = requests.post("https://code.huilianyi.com/yali.liu/scavenger/compare/master...yali.liu:dev", data=data, headers={"Content-Type": "application/x-www-form-urlencoded"})
-    print(response3.text)
+    git = HeliosGit("yali.liu")
+    git.run()
