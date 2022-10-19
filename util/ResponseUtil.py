@@ -1,5 +1,5 @@
+import json
 import logging
-
 
 from ArchiveResult import ArchiveResult
 
@@ -25,3 +25,7 @@ def assert_status(result: ArchiveResult, status):
     print("Response status code is:{} and assert status code is:{}".format(result.status_code(), status))
     assert result.status_code() == status
     return result
+
+
+def format_json(data):
+    print(json.dumps(data, indent=4, ensure_ascii=False))

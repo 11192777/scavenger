@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head data-suburl="">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	
+		<meta name="author" content="yali.liu" />
+		<meta name="description" content="scavenger" />
+		<meta name="keywords" content="go, git, self-hosted, gogs">
+	
+	<meta name="referrer" content="no-referrer" />
+	<meta name="_csrf" content="CGjM_coHA5b6Ihub8pKajMCALn06MTY2NjA3NTY2MzE0NTY0ODA5Mw==" />
+	<meta name="_suburl" content="" />
+	
+	
+	
+		<meta property="og:url" content="https://code.huilianyi.com/yali.liu/scavenger" />
+		<meta property="og:type" content="object" />
+		<meta property="og:title" content="yali.liu/scavenger">
+		<meta property="og:description" content="">
+		<meta property="og:image" content="https://code.huilianyi.com/avatars/234" />
+	
+
+	<link rel="shortcut icon" href="/img/favicon.png" />
+
+	<script src="/js/jquery-1.11.3.min.js"></script>
+	<script src="/js/libs/jquery.are-you-sure.js"></script>
+	<link rel="stylesheet" href="/assets/font-awesome-4.6.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/assets/octicons-4.3.0/octicons.min.css">
+
+	
+	
+
+	
+
+	
+	<link rel="stylesheet" href="/css/semantic-2.3.1.min.css">
+	<link rel="stylesheet" href="/css/gogs.css?v=ccddea9a765711f1549140af7b516f0b">
+	<noscript>
+		<style>
+			.dropdown:hover > .menu { display: block; }
+			.ui.secondary.menu .dropdown.item > .menu { margin-top: 0; }
+		 </style>
+	</noscript>
+
+	
+	<script src="/js/semantic-2.3.1.min.js"></script>
+	<script src="/js/gogs.js?v=ccddea9a765711f1549140af7b516f0b"></script>
+
+	<title>Compare Changes - HeliosGit</title>
+
+	<meta name="theme-color" content="#ff5343">
+
+	
+</head>
+<body>
+	<div class="full height">
+		<noscript>This website works better with JavaScript</noscript>
+
+		
+			<div class="following bar light">
+				<div class="ui container">
+					<div class="ui grid">
+						<div class="column">
+							<div class="ui top secondary menu">
+								<a class="item brand" href="/">
+									<img class="ui mini image" src="/img/favicon.png">
+								</a>
+
+								
+									<a class="item" href="/">Dashboard</a>
+									<a class="item" href="/issues">Issues</a>
+									<a class="item" href="/pulls">Pull Requests</a>
+								
+
+								<a class="item" href="/explore/repos">Explore</a>
+								
+
+								
+									<div class="right menu">
+										<div class="ui dropdown head link jump item poping up" data-content="Create..." data-variation="tiny inverted">
+											<span class="text">
+												<i class="octicon octicon-plus"><span class="sr-only">Create...</span></i>
+												<i class="octicon octicon-triangle-down"></i>
+											</span>
+											<div class="menu">
+												<a class="item" href="/repo/create">
+													<i class="octicon octicon-plus"></i> New Repository
+												</a>
+												<a class="item" href="/repo/migrate">
+													<i class="octicon octicon-repo-clone"></i> New Migration
+												</a>
+												
+											</div>
+										</div>
+
+										<div class="ui dropdown head link jump item poping up" tabindex="-1" data-content="User profile and more" data-variation="tiny inverted">
+											<span class="text avatar">
+												<img class="ui small rounded image" src="/avatars/264">
+												<span class="sr-only">User profile and more</span>
+												<i class="octicon octicon-triangle-down" tabindex="-1"></i>
+											</span>
+											<div class="menu" tabindex="-1">
+												<div class="ui header">
+													Signed in as <strong>qingyu.meng</strong>
+												</div>
+
+												<div class="divider"></div>
+												<a class="item" href="/qingyu.meng">
+													<i class="octicon octicon-person"></i> Your Profile
+												</a>
+												<a class=" item" href="/user/settings">
+													<i class="octicon octicon-settings"></i> Your Settings
+												</a>
+												<a class="item" target="_blank" rel="noopener noreferrer" href="https://gogs.io/docs" rel="noreferrer">
+													<i class="octicon octicon-question"></i> Help
+												</a>
+												
+
+												<div class="divider"></div>
+
+												<form id="logout-form" class="item" action="/user/logout" method="POST">
+													<input type="hidden" name="_csrf" value="CGjM_coHA5b6Ihub8pKajMCALn06MTY2NjA3NTY2MzE0NTY0ODA5Mw==">
+													<div class="submit-button" data-form="#logout-form">
+														<i class="octicon octicon-sign-out"></i> Sign Out
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+
+		
+
+
+<div class="repository compare pull diff">
+	<div class="header-wrapper">
+
+	<div class="ui container">
+		<div class="ui vertically padded grid head">
+			<div class="column">
+				<div class="ui header">
+					<div class="ui huge breadcrumb">
+						
+							<i class="mega-octicon octicon-lock"></i>
+						
+						<a href="/yali.liu">yali.liu</a>
+						<div class="divider"> / </div>
+						<a href="/yali.liu/scavenger">scavenger</a>
+						
+						
+					</div>
+
+					
+						<div class="ui right">
+							<form class="display inline" action="/yali.liu/scavenger/action/watch?redirect_to=%2fyali.liu%2fscavenger%2fcompare%2fdev...yali.liu%3adev" method="POST">
+								<input type="hidden" name="_csrf" value="CGjM_coHA5b6Ihub8pKajMCALn06MTY2NjA3NTY2MzE0NTY0ODA5Mw==">
+								<div class="ui labeled button" tabindex="0">
+									<button class="ui basic button">
+										<i class="eye slash outline icon"></i>Watch
+									</button>
+									<a class="ui basic label" href="/yali.liu/scavenger/watchers">
+										1
+									</a>
+								</div>
+							</form>
+							<form class="display inline" action="/yali.liu/scavenger/action/star?redirect_to=%2fyali.liu%2fscavenger%2fcompare%2fdev...yali.liu%3adev" method="POST">
+								<input type="hidden" name="_csrf" value="CGjM_coHA5b6Ihub8pKajMCALn06MTY2NjA3NTY2MzE0NTY0ODA5Mw==">
+								<div class="ui labeled button" tabindex="0">
+									<button class="ui basic button">
+										<i class="star outline icon"></i>Star
+									</button>
+									<a class="ui basic label" href="/yali.liu/scavenger/stars">
+										0
+									</a>
+								</div>
+							</form>
+							
+								<div class="ui labeled button" tabindex="0">
+									<a class="ui basic button " href="/repo/fork/3865">
+										<i class="octicon octicon-repo-forked"></i>Fork
+									</a>
+									<a class="ui basic label" href="/yali.liu/scavenger/forks">
+										0
+									</a>
+								</div>
+							
+						</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ui divider"></div>
+
+</div>
+
+	<div class="ui container">
+		<div class="sixteen wide column page grid">
+			<h2 class="ui header">
+				Compare Changes
+				<div class="sub header">Compare two branches and make a pull request for changes.</div>
+			</h2>
+			<div class="ui segment choose branch">
+				<span class="octicon octicon-git-compare"></span>
+				<div class="ui floating filter dropdown" data-no-results="No results found.">
+					<div class="ui basic small button">
+						<span class="text">base: dev</span>
+						<i class="dropdown icon"></i>
+					</div>
+					<div class="menu">
+						<div class="ui icon search input">
+							<i class="filter icon"></i>
+							<input name="search" placeholder="Filter branch...">
+						</div>
+						<div class="scrolling menu">
+							
+								<div class="item selected" data-url="/yali.liu/scavenger/compare/dev...yali.liu:dev">dev</div>
+							
+								<div class="item " data-url="/yali.liu/scavenger/compare/master...yali.liu:dev">master</div>
+							
+						</div>
+					</div>
+				</div>
+				...
+				<div class="ui floating filter dropdown">
+					<div class="ui basic small button">
+						<span class="text">compare: dev</span>
+						<i class="dropdown icon"></i>
+					</div>
+					<div class="menu">
+						<div class="ui icon search input">
+							<i class="filter icon"></i>
+							<input name="search" placeholder="Filter branch...">
+						</div>
+						<div class="scrolling menu">
+							
+								<div class="selected item" data-url="/yali.liu/scavenger/compare/dev...yali.liu:dev">dev</div>
+							
+								<div class=" item" data-url="/yali.liu/scavenger/compare/dev...yali.liu:master">master</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+
+			
+				<div class="ui segment">
+					There is nothing to compare because base and head branches are even.
+				</div>
+			
+		</div>
+
+	</div>
+</div>
+
+	</div>
+	<footer>
+		<div class="ui container">
+			<div class="ui left">
+				© 2022 Gogs  Page: <strong>128ms</strong> Template: <strong>38ms</strong>
+			</div>
+			<div class="ui right links">
+				
+				<div class="ui language bottom floating slide up dropdown link item">
+					<i class="world icon"></i>
+					<div class="text">English</div>
+					<div class="menu">
+						
+							<a class="item active selected" href="#">English</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=zh-CN">简体中文</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=zh-HK">繁體中文（香港）</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=zh-TW">繁體中文（臺灣）</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=de-DE">Deutsch</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=fr-FR">français</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=nl-NL">Nederlands</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=lv-LV">latviešu</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=ru-RU">русский</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=ja-JP">日本語</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=es-ES">español</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=pt-BR">português do Brasil</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=pl-PL">polski</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=bg-BG">български</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=it-IT">italiano</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=fi-FI">suomi</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=tr-TR">Türkçe</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=cs-CZ">čeština</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=sr-SP">српски</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=sv-SE">svenska</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=ko-KR">한국어</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=gl-ES">galego</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=uk-UA">українська</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=en-GB">English (United Kingdom)</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=hu-HU">Magyar</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=sk-SK">Slovenčina</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=id-ID">Indonesian</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=fa-IR">Persian</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=vi-VN">Vietnamese</a>
+						
+							<a class="item " href="/yali.liu/scavenger/compare/dev...yali.liu:dev?lang=pt-PT">Português</a>
+						
+					</div>
+				</div>
+				<a href="/assets/librejs/librejs.html" style="display:none" data-jslicense="1">Javascript Licenses</a>
+				<a target="_blank" rel="noopener noreferrer" href="https://gogs.io">Website</a>
+				
+			</div>
+		</div>
+	</footer>
+</body>
+
+
+
+	<link rel="stylesheet" href="/plugins/highlight-9.6.0/github.css">
+	<script src="/plugins/highlight-9.6.0/highlight.pack.js"></script>
+
+
+
+
+	<link rel="stylesheet" href="/plugins/dropzone-4.2.0/dropzone.css">
+	<script src="/plugins/dropzone-4.2.0/dropzone.js"></script>
+
+
+<script src="/js/libs/emojify-1.1.0.min.js"></script>
+<script src="/js/libs/clipboard-1.5.9.min.js"></script>
+
+
+</html>
+

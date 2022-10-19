@@ -74,3 +74,29 @@ def local_private_sit_11192777():
             "password": "USF3MmUzcjR0NVle",
             "db": "e_archives_private"
         }}
+
+
+def local_private_dev_11192777():
+    data = {
+        "scope": "write",
+        "username": "11192777",
+        "cryptType": 3,
+        "password": "tGqDEDYttCbT0NVkaqLKu8tUPNZyGgVDWT1RQ5x0CAcSRajj5pBZ7mClhezCthVCRZBgbdGC9YjR2WIE2OjELJxPe+2ufiuqIwpTj21ZWFRXyT234OF74P/P1h+zCOlibWa4sDK73MF2uWZ+N1szT809Be+DC4kIFd9POWgt+hs=",
+        "x-helios-client": "web",
+        "client_id": "ArtemisWeb",
+        "client_secret": "nLCnwdIhizWbykHyuZM6TpQDd7KwK9IXDK8LGsa7SOW",
+        "grant_type": "password"
+    }
+    url = "https://archive-dev.huilianyi.com"
+    res = requests.post(url=url + "/oauth/token", data=data).json()
+    return {"token": "Bearer {}".format(res["access_token"]),
+            "archive_url": "http://127.0.0.1:9091/e-archives",
+            "tenant_id": requests.get(url + "/api/account", headers={"Authorization": "Bearer {}".format(res["access_token"])}).json()["tenantId"],
+            "hermes_url": url, "mysql": {
+            "host": "106.15.26.10",
+            "port": 21906,
+            "username": "artemis",
+            "password": "MTIzNDU2TXMz",
+            "db": "e_archives_jxmobile"
+        }}
+
