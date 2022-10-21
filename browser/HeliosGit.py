@@ -1,8 +1,6 @@
+import argparse
 import os
-import re
-from urllib.parse import urlencode, unquote
-from urllib.parse import urlunparse
-from xml.etree import ElementTree
+from urllib.parse import unquote
 
 import requests
 from lxml import etree
@@ -11,11 +9,12 @@ from requests.cookies import RequestsCookieJar
 
 class HeliosGit:
 
-    def __init__(self, path="huilianyi", project_name=None, branch_name=None, user_name=None, remote_name=None):
+    def __init__(self, path=None, project_name=None, branch_name=None, user_name=None, remote_name=None, remote_branch_name=None, title=None):
         self.cookies = RequestsCookieJar()
         self.info = {}
-        self.path = path
+        self.path = "huilianyi"
         self.push_info()
+        self.title = None
         if project_name is not None:
             self.info["project_name"] = project_name
         if branch_name is not None:
@@ -24,6 +23,12 @@ class HeliosGit:
             self.info["user_name"] = user_name
         if remote_name is not None:
             self.info["remote_name"] = remote_name
+        if remote_branch_name is not None:
+            self.info["remote_branch_name"] = remote_branch_name
+        if path is not None:
+            self.path = path
+        if title is not None:
+            self.title = title
 
     def access(self):
         url = "https://code.huilianyi.com/user/login"
@@ -39,33 +44,47 @@ class HeliosGit:
         self.cookies.update(response.cookies)
 
     def compare(self):
-        url = "https://code.huilianyi.com/{}/{}/compare/{}...{}:{}".format(self.path, self.info["project_name"], self.info["branch_name"], self.info["user_name"], self.info["branch_name"])
-        print(url)
+        url = "https://code.huilianyi.com/{}/{}/compare/{}...{}:{}".format(self.path, self.info["project_name"], self.info["branch_name"], self.info["user_name"], self.info["remote_branch_name"])
         response = requests.get(url=url, cookies=self.cookies)
         html = etree.HTML(response.text)
-        commits = html.xpath("/html/body/div[@class='full height']/div[@class='repository compare pull diff']/div[@class='ui container']/div[@class='sixteen wide column page grid']/div[@class='ui unstackable attached table segment']/table[@id='commits-table']/tbody")
-        print(commits)
+        commits = html.xpath("/html/body/div[@class='full height']/div[@class='repository compare pull diff']/div[@class='ui container']/div[@class='sixteen wide column page grid']/div[@class='ui unstackable attached table segment']/table[@id='commits-table']/tbody/tr")
+        commit_content = []
         for commit in commits:
-            user = commit.xpath("./tr/td[@class='author']/text()")
-            comment = commit.xpath("./tr/td[@class='message collapsing']/span/text()")
-            print("user:{} comment:{}".format(str.strip(user[1]), str.strip(comment[0])))
-        return "None"
+            user = commit.xpath("./td[@class='author']/text()")
+            comment = commit.xpath("./td[@class='message collapsing']/span/text()")
+            if str.strip(user[1]) == self.info["commit_username"]:
+                commit_content.append(str.strip(comment[0]))
+        return commit_content
 
     def merge(self, title):
-        url = "https://code.huilianyi.com/{}/{}/compare/{}...{}:{}".format(self.path, self.info["project_name"], self.info["branch_name"], self.info["user_name"], self.info["branch_name"])
+        url = "https://code.huilianyi.com/{}/{}/compare/{}...{}:{}".format(self.path, self.info["project_name"], self.info["branch_name"], self.info["user_name"], self.info["remote_branch_name"])
+        print("===> Merge url is:{} Title is:{}".format(url, title))
         response = requests.post(url=url, data={"title": title, "_csrf": unquote(self.cookies.get("_csrf"))}, cookies=self.cookies, headers={"Content-Type": "application/x-www-form-urlencoded"})
 
     def run(self):
         self.access()
         self.login()
-        self.compare()
-        # self.merge()
+        if self.title is None:
+            merge_info = ""
+            commits = self.compare()
+            for i in range(len(commits)):
+                merge_info = merge_info + "{}.{}    ".format(str(i + 1), commits[i])
+            merge_info = "[{}] {}".format(self.info["branch_name"], merge_info)
+            self.merge(merge_info)
+        else:
+            self.merge(self.title)
 
     def push_info(self):
-        branch_vv = os.popen("git branch -vv").read().split()[3]
+        branch_vv = ""
+        for line in os.popen("git branch -vv").read().split("\n"):
+            if line.startswith("*"):
+                branch_vv = line.split()[3]
         remote_name = branch_vv[branch_vv.index("[") + 1:branch_vv.index("/")]
         self.info["remote_name"] = remote_name
-        branch_name = os.popen("git branch").read().split()[1]
+        branch_name = ""
+        for line in os.popen("git branch").read().split("\n"):
+            if line.startswith("*"):
+                branch_name = line.split()[1]
         self.info["branch_name"] = branch_name
         remove_v = os.popen("git remote -v")
         line = remove_v.readline()
@@ -80,8 +99,21 @@ class HeliosGit:
 
                 break
             line = remove_v.readline()
+        self.info["commit_username"] = os.popen("git config user.name").read().split()[0]
+        self.info["remote_branch_name"] = self.info["branch_name"]
 
 
 if __name__ == '__main__':
-    git = HeliosGit(project_name="e-archives", branch_name="uat", user_name="qingyu.meng")
-    git.run()
+    try:
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--path', type=str, default=None, help="指定域名")
+        parser.add_argument('--branch', type=str, default=None, help="指定远程分支")
+        parser.add_argument('--project', type=str, default=None, help="指定项目名称")
+        parser.add_argument('--username', type=str, default=None, help="指定提交人名称")
+        parser.add_argument('--cbranch', type=str, default=None, help="指定本地分支")
+        parser.add_argument('--title', type=str, default=None, help="自定义标题")
+        args = parser.parse_args()
+        git = HeliosGit(path=args.path, project_name=args.project, branch_name=args.cbranch, user_name=args.username, remote_branch_name=args.branch, title=args.title)
+        git.run()
+    except Exception as e:
+        print(repr(e))
