@@ -22,7 +22,7 @@ def field_template_sql_oracle():
 @app.route("/field_template/java", methods=["get"])
 def field_template_java():
     field_template = FieldTemplate(content=request.data.decode('utf-8'))
-    return app.response_class(response=field_template.get_sql(), status=200, mimetype='application/txt')
+    return app.response_class(response=field_template.get_java_enum(), status=200, mimetype='application/txt')
 
 
 @app.route("/filed_template/test", methods=["get", "post"])

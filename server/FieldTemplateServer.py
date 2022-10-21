@@ -9,7 +9,7 @@ from FormServer import FormServer
 
 class FieldTemplate:
 
-    def __init__(self, content: str, db_type):
+    def __init__(self, content: str, db_type=None):
         self.fields_by_form = None
         self.content_csv = None
         self.title_csv = None
