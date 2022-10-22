@@ -64,9 +64,12 @@ class HeliosGit:
     def run(self):
         self.access()
         self.login()
+        commits = self.compare()
+        if len(commits) == 0:
+            print("Already synced. The operation has been canceled.")
+            return
         if self.title is None:
             merge_info = ""
-            commits = self.compare()
             for i in range(len(commits)):
                 merge_info = merge_info + "{}.{}    ".format(str(i + 1), commits[i])
             merge_info = "[{}] {}".format(self.info["branch_name"], merge_info)
