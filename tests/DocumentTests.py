@@ -47,3 +47,4 @@ class OpenDocumentTests(unittest.TestCase):
         ResponseUtil.assert_status(self.document_server.open_save_document([self.document_server.random_open_document_data(fields=[{"fieldCode": "INTEGER", "value": "20"}])]), "0000")
 
     def test_去掉是否纸质单据的逻辑(self):
+        pass;

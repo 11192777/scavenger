@@ -9,7 +9,7 @@ from sqlalchemy.dialects import mysql
 
 from MySqlHelper import MysqlDb
 
-ignoreList = ["20220823115878", "20220826113000"]
+ignoreList = ["20220823115878", "20220826113000", "2022091509270001"]
 
 
 def listChangeLogsByFilePath(path, ignoreFiles=None):
