@@ -1,10 +1,13 @@
+import base64
 import unittest
+
+from MySqlHelper import MysqlDb
 
 
 class CategoryScripts(unittest.TestCase):
 
     def setUp(self):
-        data = '''工程档案	KJ
+        data = '''工程档案	KJ  
                 文书档案	WS
                 合同档案	HT
                 产品档案	CP
@@ -26,6 +29,9 @@ class CategoryScripts(unittest.TestCase):
             items.append({"name": line.split()[0], "code": line.split()[1]})
         self.items = items
         print("\n")
+        self.db = MysqlDb(host="106.15.26.10", port=21906, user="artemis",
+                          passwd=str(base64.b64decode("MTIzNDU2TXMz"), "utf-8"), db="e_archives_jxmobile")
+        self.categories = self.db.select("SELECT * FROM ea_category;")
 
     def test_生成SQL(self):
         index = 1001
@@ -40,19 +46,21 @@ class CategoryScripts(unittest.TestCase):
             index = index + 1
 
     def test_生成枚举(self):
-        for item in self.items:
+        for item in self.categories:
             name = item["name"]
             code = item["code"]
+            originalCode = item["original_code"]
             print('''
                /**
                * {}
                */
-               {}("{}", "{}"),'''.format(name, code, code, name))
+               {}("{}", "{}", "{}"),'''.format(name, code, code, originalCode, name))
 
     def test_生成分表(self):
         tables = ["ea_document", "ea_document_attachment", "ea_document_field_value", "ea_archive",
                   "ea_archive_document", "ea_archive_field_value", "ea_attachment", "ea_operation_audit_log"]
         for table in tables:
-            for item in self.items:
-                print("CREATE TABLE IF NOT EXISTS {}_{} LIKE {};".format(table, item["code"], table))
+            for category in self.categories:
+                # print("CREATE TABLE IF NOT EXISTS {}_{} LIKE {};".format(table, category["code"], table))
+                print("DROP TABLE IF EXISTS {}_{};".format(table, category["code"]))
             print("\n")
