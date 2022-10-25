@@ -16,8 +16,7 @@ ENV = LoginServer.private_sit_16660000000()
 class ArchiveTypeTests(unittest.TestCase):
 
     def setUp(self):
-        env = ENV
-        self.server = FormServer(env)
+        self.server = FormServer(ENV)
 
     def tearDown(self):
         pass

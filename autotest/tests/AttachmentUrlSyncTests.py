@@ -15,8 +15,7 @@ ENV = LoginServer.local_private_sit_16660000000()
 class AttachmentUrlSyncTests(unittest.TestCase):
 
     def setUp(self):
-        env = ENV
-        self.server = AttachmentUrlSyncServer(env)
+        self.server = AttachmentUrlSyncServer(ENV)
 
     def test生成url附件同步任务(self):
         self.server.random_datas()

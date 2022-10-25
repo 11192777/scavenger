@@ -18,11 +18,10 @@ if __name__ == '__main__':
 class OpenDocumentTests(unittest.TestCase):
 
     def setUp(self):
-        env = ENV
-        self.document_server = DocumentServer(env)
-        self.hermes_server = HermesServer(env)
-        self.form_field_server = FormFieldServer(env)
-        self.form_server = FormServer(env)
+        self.document_server = DocumentServer(ENV)
+        self.hermes_server = HermesServer(ENV)
+        self.form_field_server = FormFieldServer(ENV)
+        self.form_server = FormServer(ENV)
 
     def tearDown(self):
         pass

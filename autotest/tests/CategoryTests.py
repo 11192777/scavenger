@@ -14,8 +14,7 @@ ENV = LoginServer.local_private_dev_11192777()
 class CategoryTests(unittest.TestCase):
 
     def setUp(self):
-        env = ENV
-        self.server = CategoryServer(env)
+        self.server = CategoryServer(ENV)
 
     def test_获取一级门类列表(self):
         ResponseUtil.format_json(self.server.listSubCategory().data())
