@@ -1,5 +1,6 @@
 import argparse
 import os
+import re
 from urllib.parse import unquote
 
 import requests
@@ -94,11 +95,9 @@ class HeliosGit:
         while line != "":
             items = line.split()
             if items[0] == remote_name:
-                target = items[1]
-                project_name = target[target.index("/") + 1:target.rindex(".")]
-                self.info["project_name"] = project_name
-                user_name = target[target.index(":") + 1:target.index("/")]
-                self.info["user_name"] = user_name
+                target = re.findall(r'https:\/\/code.huilianyi.com\/(.+?)\.git', items[1])[0]
+                self.info["project_name"] = target.split("/")[0]
+                self.info["user_name"] = target.split("/")[1]
 
                 break
             line = remove_v.readline()
