@@ -64,3 +64,7 @@ class CategoryScripts(unittest.TestCase):
                 # print("CREATE TABLE IF NOT EXISTS {}_{} LIKE {};".format(table, category["code"], table))
                 print("DROP TABLE IF EXISTS {}_{};".format(table, category["code"]))
             print("\n")
+
+    def test_生成接口描述(self):
+        for item in self.categories:
+            print("编码:{}  名称:{}".format(item["code"], item["name"]))
