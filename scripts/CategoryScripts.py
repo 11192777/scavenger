@@ -7,22 +7,23 @@ from MySqlHelper import MysqlDb
 class CategoryScripts(unittest.TestCase):
 
     def setUp(self):
-        data = '''工程档案	KJ  
-                文书档案	WS
-                合同档案	HT
-                产品档案	CP
-                招投标档案	ZT
-                科研档案	KY
-                审计档案	SJ
-                实物档案	SW
-                会计档案	KJ
-                标准化档案	QYBZ
-                教学档案	JX
-                权证档案	QZ
-                特殊载体档案	TS
-                专题档案	ZT
-                专利档案	QYZL
-                声像档案	SX'''
+        data = '''工程档案	KJ
+文书档案	WS
+合同档案	HT
+产品档案	CP
+招投标档案	ZTB
+科研档案	KY
+审计档案	SJ
+实物档案	SW
+会计档案	CMJX-KJ
+标准化档案	QYBZ
+教学档案	JX
+权证档案	QZ
+特殊载体档案	TS
+专题档案	ZT
+专利档案	QYZL
+声像档案	SX
+信访档案	XF'''
         items = []
         lines = data.split("\n")
         for line in lines:
@@ -38,9 +39,8 @@ class CategoryScripts(unittest.TestCase):
         print("\nDELETE FROM ea_category WHERE 1 = 1;")
         for item in self.items:
             print(
-                "INSERT INTO ea_category(id, code, original_code, name, tenant_id) VALUES ('{}', '{}', '{}', '{}', '-1');".format(
+                "INSERT INTO ea_category(id, code, name, tenant_id) VALUES ('{}', '{}', '{}', '-1');".format(
                     index,
-                    item["code"],
                     item["code"],
                     item["name"]))
             index = index + 1
@@ -49,22 +49,21 @@ class CategoryScripts(unittest.TestCase):
         for item in self.categories:
             name = item["name"]
             code = item["code"]
-            originalCode = item["original_code"]
             print('''
                /**
                * {}
                */
-               {}("{}", "{}", "{}"),'''.format(name, code, code, originalCode, name))
+               {}("{}", "{}"),'''.format(name, str(code).replace("—", "_"), code, name))
 
     def test_生成分表(self):
         tables = ["ea_document", "ea_document_attachment", "ea_document_field_value", "ea_archive",
                   "ea_archive_document", "ea_archive_field_value", "ea_attachment", "ea_operation_audit_log"]
         for table in tables:
             for category in self.categories:
-                # print("CREATE TABLE IF NOT EXISTS {}_{} LIKE {};".format(table, category["code"], table))
-                print("DROP TABLE IF EXISTS {}_{};".format(table, category["code"]))
+                print("CREATE TABLE IF NOT EXISTS {}_{} LIKE {};".format(table, str(category["code"]).lower().replace("—", "_"), table))
+                # print("DROP TABLE IF EXISTS {}_{};".format(table, category["code"]))
             print("\n")
 
     def test_生成接口描述(self):
         for item in self.categories:
-            print("编码:{}  名称:{}".format(item["code"], item["name"]))
+            print("编码:{}  名称:{}".format(str(item["code"]).replace("-", "_"), item["name"]))
