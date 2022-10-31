@@ -10,7 +10,7 @@ import RandomUtils
 from DocumentServer import DocumentServer
 from FormFieldServer import FormFieldServer
 from FormServer import FormServer
-from HermesServer import HermesServe
+from HermesServer import HermesServer
 
 
 class DataBuilder(threading.Thread):
@@ -23,7 +23,7 @@ class DataBuilder(threading.Thread):
         self.count = count
         self.form_server = FormServer({"token": token, "archive_url": url})
         logging.info('===> Form server build successfully.')
-        self.hermes_server = HermesServe({"token": token, "archive_url": url})
+        self.hermes_server = HermesServer({"token": token, "archive_url": url})
         logging.info('===> Hermes server build successfully.')
         self.form_field_server = FormFieldServer({"token": token, "archive_url": url})
         logging.info('===> Form field server build successfully.')

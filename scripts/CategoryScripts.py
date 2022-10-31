@@ -59,8 +59,8 @@ class CategoryScripts(unittest.TestCase):
                   "ea_archive_document", "ea_archive_field_value", "ea_attachment", "ea_operation_audit_log"]
         for table in tables:
             for category in self.categories:
-                print("CREATE TABLE IF NOT EXISTS {}_{} LIKE {};".format(table, str(category["code"]).lower().replace("-", "_"), table))
-                # print("DROP TABLE IF EXISTS {}_{};".format(table, category["code"]))
+                # print("CREATE TABLE IF NOT EXISTS {}_{} LIKE {};".format(table, str(category["code"]).lower().replace("-", "_"), table))
+                print("DROP TABLE IF EXISTS {}_{}01;".format(table, str(category["code"]).lower().replace("-", "_")))
             print("\n")
 
     def test_生成接口描述(self):

@@ -1,6 +1,7 @@
 import datetime
 import random
 
+
 def random_one(list):
     return list[random.randint(0, len(list) - 1)]
 
@@ -23,3 +24,10 @@ def random_str(size):
 
 def random_time():
     return str(datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f'))
+
+
+def randomStrArray(itemLen, size):
+    data = []
+    for i in range(size):
+        data.append(random_str(itemLen))
+    return data
