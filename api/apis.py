@@ -1,17 +1,25 @@
 import json
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 from FieldTemplateServer import FieldTemplate
 
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
+CORS(app, resources=r'/*')
+
+
+@app.route("/api/field_template/selector", methods=["get"])
+def fieldTemplateSelector():
+    return app.response_class(response=json.dumps(FieldTemplate.apiSelector, ensure_ascii=False), status=200, mimetype="application/json;charset=UTF-8")
 
 
 @app.route("/field_template/sql/mysql", methods=["get"])
 def field_template_sql_mysql():
     field_template = FieldTemplate(content=request.data.decode('utf-8'), db_type="MYSQL")
     return app.response_class(response=field_template.get_sql(), status=200, mimetype='application/txt')
+
 
 @app.route("/field_template/sql/oracle", methods=["get"])
 def field_template_sql_oracle():

@@ -13,16 +13,16 @@ if __name__ == '__main__':
         for line in file.readlines():
             for item in json.loads(line)[0]:
                 pri = item["primaryField"]
-                if pri == '20221024103153624617':
-                    print(item)
                 for att in item["attachmentList"]:
                     if "attachmentOID" not in att:
-                        if "miniso" in att["fileURL"]:
+                        if "fund.mobvista" in att["fileURL"]:
+                            if "fileName" not in att:
+                                continue
                             filename = att["fileName"]
                             url = att["fileURL"]
-                            # sql = '\'{{"attachTypeCode":"0","documentPrimaryField":"{}","fileName":"{}","fileUrl":"{}","traceId":"0000000000000"}}\''.format(pri, filename, url)
-                            # print(
-                            #     "insert into `ea_attachment_sync_task`(`status`,`value`,`tenant_id`) values('AWAIT', {},'1194824448723337218');".format(sql))
+                            sql = '\'{{"attachTypeCode":"0","documentPrimaryField":"{}","fileName":"{}","fileUrl":"{}","traceId":"0000000000000"}}\''.format(pri, filename, url)
+                            print(
+                                "insert into `ea_attachment_sync_task`(`status`,`value`,`tenant_id`) values('AWAIT', {},'1272723726964219905');".format(sql))
                             a += 1
     print(a)
 

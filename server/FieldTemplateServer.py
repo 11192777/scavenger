@@ -9,6 +9,12 @@ from FormServer import FormServer
 
 class FieldTemplate:
 
+    apiSelector = [
+        {"name": "生成MySQL脚本", "param": "mysql"},
+        {"name": "生成Oracle脚本", "param": "oracle"},
+        {"name": "生成JavaEnum", "param": "enum"},
+    ]
+
     def __init__(self, content: str, db_type=None):
         self.fields_by_form = None
         self.content_csv = None
@@ -24,6 +30,38 @@ class FieldTemplate:
             return "PERSONNEL"
         elif business_type == "综合档案":
             return "GENERAL"
+        elif business_type == "招投标档案":
+            return "ZTB"
+        elif business_type == "工程档案":
+            return "KJ"
+        elif business_type == "文书档案":
+            return "WS"
+        elif business_type == "审计档案":
+            return "SJ"
+        elif business_type == "招投标档案":
+            return "ZTB"
+        elif business_type == "信访档案":
+            return "XF"
+        elif business_type == "声像档案":
+            return "SX"
+        elif business_type == "专利档案":
+            return "QYZL"
+        elif business_type == "权证档案":
+            return "QZ"
+        elif business_type == "标准化档案":
+            return "QYBZ"
+        elif business_type == "教学档案":
+            return "JX"
+        elif business_type == "实物档案":
+            return "SW"
+        elif business_type == "合同档案":
+            return "HT"
+        elif business_type == "专题档案":
+            return "ZT"
+        elif business_type == "科研档案":
+            return "KY"
+        elif business_type == "产品档案":
+            return "CP"
         else:
             return None
 
