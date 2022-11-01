@@ -14,13 +14,14 @@ class Test(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
+        keys = RandomUtils.randomStrArray(5, 10)
         for i in range(1000):
             data = {
                 "companyCode": "0001",
                 "documentTypeCode": "4501",
                 "originalNumber": str(uuid.uuid1()),
                 "isPaper": "true",
-                "primaryField": str(uuid.uuid1()),
+                "primaryField": RandomUtils.random_one(keys),
                 "fieldValueList": [
                     {
                         "fieldCode": "TEXT_ARRAY",

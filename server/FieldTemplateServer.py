@@ -10,9 +10,9 @@ from FormServer import FormServer
 class FieldTemplate:
 
     apiSelector = [
-        {"name": "生成MySQL脚本", "param": "mysql"},
-        {"name": "生成Oracle脚本", "param": "oracle"},
-        {"name": "生成JavaEnum", "param": "enum"},
+        {"name": "生成mysql脚本", "param": "mysql"},
+        {"name": "生成oracle脚本", "param": "oracle"},
+        {"name": "生成java enum", "param": "enum"},
     ]
 
     def __init__(self, content: str, db_type=None):
@@ -91,7 +91,7 @@ class FieldTemplate:
             return None
 
     def get_boolean(self, value):
-        if self.db_type == "MYSQL":
+        if self.db_type == "mysql":
             if value == "是":
                 return "TRUE"
             else:
@@ -118,7 +118,7 @@ class FieldTemplate:
         return json.dumps(widget_type_property)
 
     def get_form_sql(self, form_id):
-        if self.db_type == "MYSQL":
+        if self.db_type == "mysql":
             return '''DELETE FROM ea_form WHERE id = '{}';  # 删除模板
 DELETE FROM ea_form_field WHERE form_id = '{}'; # 删除模板字段
 \n'''.format(form_id, form_id)
@@ -129,7 +129,7 @@ DELETE FROM ea_form_field WHERE form_id = '{}';
 
     def get_insert_field_sql(self, field, form_id, field_sort_number):
         self.field_id = self.field_id + 1
-        if self.db_type == "MYSQL":
+        if self.db_type == "mysql":
             return "INSERT INTO ea_form_field (id, name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property) " \
                "VALUES ({}, '{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}');\n" \
             .format(self.field_id, field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
@@ -138,7 +138,7 @@ DELETE FROM ea_form_field WHERE form_id = '{}';
                    "VALUES ({}, '{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}');\n" \
                 .format(self.field_id, field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
     def get_now_time(self):
-        if self.db_type == "MYSQL":
+        if self.db_type == "mysql":
             return "NOW()"
         else:
             return "sysdate"
@@ -174,7 +174,7 @@ DELETE FROM ea_form_field WHERE form_id = '{}';
         form_id = 10
 
         for form, fields in self.format_content():
-            if self.db_type == "MYSQL":
+            if self.db_type == "mysql":
                 sql = sql + "# {}字段模板\n".format(form[1])
             sql = sql + self.get_form_sql(form_id)
             sql = sql + self.get_insert_form_sql(form_id, form[0], form[1], self.get_business_type(form[2]))

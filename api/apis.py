@@ -4,33 +4,40 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from FieldTemplateServer import FieldTemplate
+from SqlAdapterServer import SqlAdapterServer
 
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
 CORS(app, resources=r'/*')
 
+APPLICATION_JSON = "application/json;charset=UTF-8"
+APPLICATION_TEXT = "application/txt"
+
 
 @app.route("/api/field_template/selector", methods=["get"])
 def fieldTemplateSelector():
-    return app.response_class(response=json.dumps(FieldTemplate.apiSelector, ensure_ascii=False), status=200, mimetype="application/json;charset=UTF-8")
+    return app.response_class(response=json.dumps(FieldTemplate.apiSelector, ensure_ascii=False), status=200, mimetype=APPLICATION_JSON)
 
 
-@app.route("/field_template/sql/mysql", methods=["get"])
-def field_template_sql_mysql():
-    field_template = FieldTemplate(content=request.data.decode('utf-8'), db_type="MYSQL")
-    return app.response_class(response=field_template.get_sql(), status=200, mimetype='application/txt')
+@app.route("/api/sql_adapter/selector", methods=["get"])
+def sqlAdapterSelector():
+    return app.response_class(response=json.dumps(SqlAdapterServer.apiSelector, ensure_ascii=False), status=200, mimetype=APPLICATION_JSON)
 
 
-@app.route("/field_template/sql/oracle", methods=["get"])
-def field_template_sql_oracle():
-    field_template = FieldTemplate(content=request.data.decode('utf-8'), db_type="ORACLE")
-    return app.response_class(response=field_template.get_sql(), status=200, mimetype='application/txt')
+@app.route("/api/sql_adapter/execute", methods=["post"])
+def sqlAdapterExecute():
+    executor = SqlAdapterServer(request.args["type"], request.data.decode('utf-8'))
+    return app.response_class(response=json.dumps(executor.execute(), ensure_ascii=False), status=200, mimetype=APPLICATION_TEXT)
 
 
-@app.route("/field_template/java", methods=["get"])
-def field_template_java():
-    field_template = FieldTemplate(content=request.data.decode('utf-8'))
-    return app.response_class(response=field_template.get_java_enum(), status=200, mimetype='application/txt')
+@app.route("/api/field_template/execute", methods=["post"])
+def fieldTemplateExecute():
+    if request.args["type"] == "java":
+        fieldTemplate = FieldTemplate(content=request.data.decode('utf-8'))
+        return app.response_class(response=fieldTemplate.get_java_enum(), status=200, mimetype=APPLICATION_TEXT)
+    else:
+        fieldTemplate = FieldTemplate(content=request.data.decode('utf-8'), db_type=request.args["type"])
+        return app.response_class(response=fieldTemplate.get_sql(), status=200, mimetype=APPLICATION_TEXT)
 
 
 @app.route("/filed_template/test", methods=["get", "post"])
