@@ -15,7 +15,8 @@ class HeliosGit:
         self.info = {}
         self.path = "huilianyi"
         self.push_info()
-        self.title = None
+        self.title = title
+        self.titleFormat = title and [title] or []
         if project_name is not None:
             self.info["project_name"] = project_name
         if branch_name is not None:
@@ -47,7 +48,7 @@ class HeliosGit:
 
     def compare(self):
         url = "https://code.huilianyi.com/{}/{}/compare/{}...{}:{}".format(self.path, self.info["project_name"], self.info["branch_name"], self.info["user_name"], self.info["remote_branch_name"])
-        print("===> Compare url is:{}".format(url))
+        print("===> Compare url is:\n{}".format(url))
         response = requests.get(url=url, cookies=self.cookies)
         html = etree.HTML(response.text)
         commits = html.xpath("/html/body/div[@class='full height']/div[@class='repository compare pull diff']/div[@class='ui container']/div[@class='sixteen wide column page grid']/div[@class='ui unstackable attached table segment']/table[@id='commits-table']/tbody/tr")
@@ -61,9 +62,9 @@ class HeliosGit:
 
     def merge(self, title):
         url = "https://code.huilianyi.com/{}/{}/compare/{}...{}:{}".format(self.path, self.info["project_name"], self.info["branch_name"], self.info["user_name"], self.info["remote_branch_name"])
-        print("===> Merge url is:{} Title is:{}".format(url, title))
+        print("===> Merge url is:\n{} \nTitle is:{}".format(url, "\n".join(self.titleFormat)))
         response = requests.post(url=url, data={"title": title, "_csrf": unquote(self.cookies.get("_csrf"))}, cookies=self.cookies, headers={"Content-Type": "application/x-www-form-urlencoded"}, allow_redirects=False)
-        print("===> Pull address url is: https://code.huilianyi.com{}".format(response.headers["location"]))
+        print("===> Pull address url is: \nhttps://code.huilianyi.com{}".format(response.headers["location"]))
 
     def run(self):
         self.access()
@@ -76,6 +77,7 @@ class HeliosGit:
             merge_info = ""
             for i in range(len(commits)):
                 merge_info = merge_info + "{}.{}    ".format(str(i + 1), commits[i])
+                self.titleFormat.append(merge_info)
             merge_info = "[{}] {}".format(self.info["branch_name"], merge_info)
             self.merge(merge_info)
         else:
