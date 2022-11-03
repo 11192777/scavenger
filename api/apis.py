@@ -32,12 +32,8 @@ def sqlAdapterExecute():
 
 @app.route("/api/field_template/execute", methods=["post"])
 def fieldTemplateExecute():
-    if request.args["type"] == "java":
-        fieldTemplate = FieldTemplate(content=request.data.decode('utf-8'))
-        return app.response_class(response=fieldTemplate.get_java_enum(), status=200, mimetype=APPLICATION_TEXT)
-    else:
-        fieldTemplate = FieldTemplate(content=request.data.decode('utf-8'), db_type=request.args["type"])
-        return app.response_class(response=fieldTemplate.get_sql(), status=200, mimetype=APPLICATION_TEXT)
+    executor = FieldTemplate(content=request.data.decode('utf-8'))
+    return app.response_class(response=executor.execute(request.args["type"]), status=200, mimetype=APPLICATION_TEXT)
 
 
 @app.route("/filed_template/test", methods=["get", "post"])

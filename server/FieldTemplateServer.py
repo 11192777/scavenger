@@ -8,19 +8,19 @@ from FormServer import FormServer
 
 
 class FieldTemplate:
-
     apiSelector = [
         {"name": "生成mysql脚本", "param": "mysql"},
         {"name": "生成oracle脚本", "param": "oracle"},
-        {"name": "生成java enum", "param": "enum"},
+        {"name": "生成form enum", "param": "formEnum"},
+        {"name": "生成field enum", "param": "fieldEnum"}
     ]
 
-    def __init__(self, content: str, db_type=None):
+    def __init__(self, content: str):
         self.fields_by_form = None
         self.content_csv = None
         self.title_csv = None
         self.content = content
-        self.db_type = db_type
+        self.db_type = None
         self.field_id = 1000000
 
     def get_business_type(self, business_type):
@@ -131,12 +131,13 @@ DELETE FROM ea_form_field WHERE form_id = '{}';
         self.field_id = self.field_id + 1
         if self.db_type == "mysql":
             return "INSERT INTO ea_form_field (id, name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property) " \
-               "VALUES ({}, '{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}');\n" \
-            .format(self.field_id, field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
+                   "VALUES ({}, '{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}');\n" \
+                .format(self.field_id, field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
         else:
             return "INSERT INTO ea_form_field (id, name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property) " \
                    "VALUES ({}, '{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}');\n" \
                 .format(self.field_id, field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
+
     def get_now_time(self):
         if self.db_type == "mysql":
             return "NOW()"
@@ -351,3 +352,42 @@ public enum FieldTemplateEnum {{{};
             form_server.delete_form(archive_type_id)
             logging.info('===> Delete the {} archive type successfully.'.format(business_env))
         return "SUCCESS"
+
+    def fieldEnum(self):
+        enums = []
+        for form, fields in self.format_content():
+            lines = []
+            for field in fields:
+                lines.append('{}("{}", "{}")'.format(field["字段编码*"], field["字段编码*"], field["字段名称*"]))
+            javaEnum = '''
+                @Getter
+                @AllArgsConstructor
+                public enum {} {{
+                
+                    {}
+                
+                    private final String code;
+                    private final String name;
+                
+                }}'''.format(form[0], ",\n".join(lines) + ";")
+            enums.append(javaEnum)
+
+        return '''package com.huilianyi.earchives.business.enumeration;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+/**
+ * <H1>模板字段枚举</H1>
+ *
+ * @author Qingyu.Meng
+ * @version 1.0
+ * @date 2022/11/3 11:15
+ */
+public class FieldTemplateEnum {{
+    {}  
+}}
+'''.format("\n".join(enums))
+
+    def execute(self, type):
+        if type == "fieldEnum":
+            return self.fieldEnum()
