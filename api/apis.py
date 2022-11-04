@@ -32,8 +32,8 @@ def sqlAdapterExecute():
 
 @app.route("/api/field_template/execute", methods=["post"])
 def fieldTemplateExecute():
-    executor = FieldTemplate(content=request.data.decode('utf-8'))
-    return app.response_class(response=executor.execute(request.args["type"]), status=200, mimetype=APPLICATION_TEXT)
+    executor = FieldTemplate(content=request.data.decode('utf-8'), operator=request.args["type"])
+    return app.response_class(response=executor.execute(), status=200, mimetype=APPLICATION_TEXT)
 
 
 @app.route("/filed_template/test", methods=["get", "post"])

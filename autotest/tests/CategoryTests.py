@@ -8,7 +8,7 @@ import RandomUtils
 import ResponseUtil
 from CategoryServer import CategoryServer
 
-ENV = LoginServer.local_private_dev_11192777()
+ENV = LoginServer.local_private_dev_11192777()w
 
 
 class CategoryTests(unittest.TestCase):

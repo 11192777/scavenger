@@ -15,13 +15,13 @@ class FieldTemplate:
         {"name": "生成field enum", "param": "fieldEnum"}
     ]
 
-    def __init__(self, content: str):
+    def __init__(self, content: str, operator):
         self.fields_by_form = None
         self.content_csv = None
         self.title_csv = None
         self.content = content
-        self.db_type = None
         self.field_id = 1000000
+        self.operator = operator
 
     def get_business_type(self, business_type):
         if business_type == "会计档案":
@@ -91,7 +91,7 @@ class FieldTemplate:
             return None
 
     def get_boolean(self, value):
-        if self.db_type == "mysql":
+        if self.operator == "mysql":
             if value == "是":
                 return "TRUE"
             else:
@@ -118,7 +118,7 @@ class FieldTemplate:
         return json.dumps(widget_type_property)
 
     def get_form_sql(self, form_id):
-        if self.db_type == "mysql":
+        if self.operator == "mysql":
             return '''DELETE FROM ea_form WHERE id = '{}';  # 删除模板
 DELETE FROM ea_form_field WHERE form_id = '{}'; # 删除模板字段
 \n'''.format(form_id, form_id)
@@ -129,17 +129,17 @@ DELETE FROM ea_form_field WHERE form_id = '{}';
 
     def get_insert_field_sql(self, field, form_id, field_sort_number):
         self.field_id = self.field_id + 1
-        if self.db_type == "mysql":
+        if self.operator == "mysql":
             return "INSERT INTO ea_form_field (id, name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property) " \
                    "VALUES ({}, '{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}');\n" \
-                .format(self.field_id, field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
+                .format(self.field_id, field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持接口同步数据编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
         else:
             return "INSERT INTO ea_form_field (id, name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property) " \
                    "VALUES ({}, '{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}');\n" \
-                .format(self.field_id, field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
+                .format(self.field_id, field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持接口同步数据编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
 
     def get_now_time(self):
-        if self.db_type == "mysql":
+        if self.operator == "mysql":
             return "NOW()"
         else:
             return "sysdate"
@@ -175,7 +175,7 @@ DELETE FROM ea_form_field WHERE form_id = '{}';
         form_id = 10
 
         for form, fields in self.format_content():
-            if self.db_type == "mysql":
+            if self.operator == "mysql":
                 sql = sql + "# {}字段模板\n".format(form[1])
             sql = sql + self.get_form_sql(form_id)
             sql = sql + self.get_insert_form_sql(form_id, form[0], form[1], self.get_business_type(form[2]))
@@ -388,6 +388,12 @@ public class FieldTemplateEnum {{
 }}
 '''.format("\n".join(enums))
 
-    def execute(self, type):
-        if type == "fieldEnum":
+    def execute(self):
+        if self.operator == "fieldEnum":
             return self.fieldEnum()
+        elif self.operator == "mysql":
+            return self.get_sql()
+        elif self.operator == "oracle":
+            return self.fieldEnum()
+        elif self.operator == "formEnum":
+            return self.get_java_enum()
