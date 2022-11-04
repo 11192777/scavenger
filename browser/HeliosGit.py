@@ -100,7 +100,8 @@ class HeliosGit:
         while line != "":
             items = line.split()
             if items[0] == remote_name:
-                target = re.findall(r'https:\/\/code.huilianyi.com\/(.+?)\.git', items[1])[0]
+                remote_url = items[1]
+                target = remote_url.startswith("http") and re.findall(r'https:\/\/code.huilianyi.com\/(.+?)\.git', items[1])[0] or re.findall(r'gogsio@code.huilianyi.com:(.+?)\.git', items[1])[0]
                 self.info["user_name"] = target.split("/")[0]
                 self.info["project_name"] = target.split("/")[1]
                 break
