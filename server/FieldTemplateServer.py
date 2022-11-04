@@ -394,6 +394,6 @@ public class FieldTemplateEnum {{
         elif self.operator == "mysql":
             return self.get_sql()
         elif self.operator == "oracle":
-            return self.fieldEnum()
+            return self.get_sql()
         elif self.operator == "formEnum":
             return self.get_java_enum()
