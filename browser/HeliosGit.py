@@ -63,11 +63,9 @@ class HeliosGit:
     def merge(self, title):
         url = "https://code.huilianyi.com/{}/{}/compare/{}...{}:{}".format(self.path, self.info["project_name"], self.info["branch_name"], self.info["user_name"], self.info["remote_branch_name"])
         print("===> Merge url is:\n{} \nTitle is:{}".format(url, title))
+        title = len(title) < 240 and title or (title[:240] + " ...")
         response = requests.post(url=url, data={"title": title, "_csrf": unquote(self.cookies.get("_csrf"))}, cookies=self.cookies, headers={"Content-Type": "application/x-www-form-urlencoded"}, allow_redirects=False)
-        if "location" not in response.headers:
-            print("===> Guessing code conflicts.")
-        else:
-            print("===> Pull address url is: \nhttps://code.huilianyi.com{}".format(response.headers["location"]))
+        print("===> Pull address url is: \nhttps://code.huilianyi.com{}".format(response.headers["location"]))
 
     def run(self):
         self.access()
