@@ -77,7 +77,8 @@ class HeliosGit:
         if self.title is None:
             merge_info = ""
             for i in range(len(commits)):
-                merge_info = merge_info + "{}.{}    ".format(str(i + 1), commits[i])
+                info = commits[i][:5] == "Merge" and "Merge remote-tracking." or commits[i]
+                merge_info = merge_info + "{}.{}  ".format(str(i + 1), info)
                 self.titleFormat.append(merge_info)
             merge_info = "[{}] {}".format(self.info["branch_name"], merge_info)
             self.merge(merge_info)
