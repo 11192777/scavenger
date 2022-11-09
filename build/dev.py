@@ -2,13 +2,13 @@ import logging
 import os
 import sys
 
-from config.setting import SERVER_PORT
-
-from api.apis import app
-
 # 项目根路径
-BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, BASE_PATH)  # 将项目根路径临时加入环境变量，程序退出后失效
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+for dir in os.listdir(BASE_PATH):
+    str(dir).startswith(".") or sys.path.append("{}/{}".format(BASE_PATH, dir))
+
+from config.setting import SERVER_PORT
+from api.apis import app
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s -%(module)s:  %(message)s', datefmt='%Y-%m-%d %,H:%M:%S ', level=logging.INFO)
