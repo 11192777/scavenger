@@ -3,7 +3,7 @@ import os
 import sys
 
 # 项目根路径
-BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 for dir in os.listdir(BASE_PATH):
     str(dir).startswith(".") or sys.path.append("{}/{}".format(BASE_PATH, dir))
 
