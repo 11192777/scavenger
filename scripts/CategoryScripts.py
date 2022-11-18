@@ -66,3 +66,12 @@ class CategoryScripts(unittest.TestCase):
     def test_生成接口描述(self):
         for item in self.categories:
             print("编码:{}  名称:{}".format(str(item["code"]).replace("-", "_"), item["name"]))
+
+
+    def test_生成脚本SQL(self):
+        for item in self.categories:
+            code = str(item["code"]).replace("-", "_").lower()
+            print("ALTER TABLE ea_archive_{} ADD COLUMN project_id bigint NOT NULL DEFAULT '-1' COMMENT '项目id';".format(code))
+            print("ALTER TABLE ea_archive_{} ADD COLUMN year int NOT NULL DEFAULT '1970' COMMENT '年份';".format(code))
+            print("CREATE INDEX idx_projectId ON ea_archive_{} (project_id);".format(code))
+            print("\n")

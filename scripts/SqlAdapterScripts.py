@@ -51,9 +51,9 @@ def printOracleSqlByTableName(db, tableName):
 class SalAdapterScripts(unittest.TestCase):
 
     def test_生成ChangeSet差异(self):
-        oracleOldPath = "/Users/vicoko/workspace/idea/e-archives-copy/archive/src/main/resources/db/changelog/oracle/oldFile"
-        oraclePath = "/Users/vicoko/workspace/idea/e-archives-copy/archive/src/main/resources/db/changelog/oracle"
-        mysqlPath = "/Users/vicoko/workspace/idea/e-archives-copy/archive/src/main/resources/db/sub-table/sub-table.xml"
+        oracleOldPath = "/Users/vicoko/workspace/idea/e-archives/archive/src/main/resources/db/changelog/oracle/oldFile"
+        oraclePath = "/Users/vicoko/workspace/idea/e-archives/archive/src/main/resources/db/changelog/oracle"
+        mysqlPath = "/Users/vicoko/workspace/idea/e-archives/archive/src/main/resources/db/sub-table/sub-table.xml"
 
         oracleChangeSets = listChangeLogsByFilePath(oraclePath) + listChangeLogsByFilePath(oracleOldPath) + ignoreList
         mysqlChangeSets = listChangeLogsByFilePath(mysqlPath, ["release.1.0.xml", "release.1.1.xml", "release.1.2.xml", "release.1.3.xml", "release.1.4.xml", "release.1.5.xml", "release.20220617.xml", "release.20220715.xml", "release.20220812.xml", "sub-table.xml"])
@@ -116,4 +116,3 @@ class SalAdapterScripts(unittest.TestCase):
             temp = temp + line + "\n"
         data = temp
         print(data)
-
