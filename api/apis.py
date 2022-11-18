@@ -42,6 +42,13 @@ def field_template_test():
     return field_template.field_template_test(url=request.args.get("url"), token=request.headers.get("Authorization"))
 
 
+@app.route("/api/attachment/upload", methods=["post"])
+def attachmentUpload():
+    f = request.files["file"]
+    f.save("/desktop/" + f.filename)
+    return jsonify(request.json)
+
+
 @app.route('/data', methods=['get', 'post'])
 def get_data():
     # 获取URL中的参数，例：http://127.0.0.1:5000/data?page=1&limit=10，获取?后的数据
