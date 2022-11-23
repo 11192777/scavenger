@@ -120,12 +120,10 @@ class FieldTemplate:
     def get_form_sql(self, form_id):
         if self.operator == "mysql":
             return '''DELETE FROM ea_form WHERE id = '{}';  # 删除模板
-DELETE FROM ea_form_field WHERE form_id = '{}'; # 删除模板字段
-\n'''.format(form_id, form_id)
+'''.format(form_id)
         else:
             return '''DELETE FROM ea_form WHERE id = '{}';
-DELETE FROM ea_form_field WHERE form_id = '{}';
-\n'''.format(form_id, form_id)
+'''.format(form_id)
 
     def get_insert_field_sql(self, field, form_id, field_sort_number):
         self.field_id = self.field_id + 1
@@ -185,6 +183,7 @@ DELETE FROM ea_form_field WHERE form_id = '{}';
                 field_sort_number = field_sort_number + 1
             form_id = form_id + 1
             sql = sql + "\n\n"
+        sql = "DELETE FROM ea_form_field WHERE id BETWEEN '{}' AND '{}';\n\n".format(self.field_id - len(self.content_csv), self.field_id) + sql
         return sql
 
     def get_java_enum(self):
