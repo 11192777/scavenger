@@ -43,7 +43,7 @@ export const constantRouterMap = [
     path: '/',
     component: Layout,
     redirect: '/scripts',
-    name: 'orgs',
+    name: 'scripts',
     meta: {title: 'SCRIPTS', icon: 'example'},
     children: [
       {
@@ -57,6 +57,12 @@ export const constantRouterMap = [
         name: 'sqlAdapter',
         component: () => import('@/views/scripts/sqlAdapter'),
         meta: { title: 'SQL转换', icon: 'table' }
+      },
+      {
+        path: 'strUtil',
+        name: 'strUtil',
+        component: () => import('@/views/scripts/stringUtil'),
+        meta: { title: '字符串转换', icon: 'table' }
       },
       {
         path: 'attachment/:id',

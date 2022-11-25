@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 
@@ -35,3 +36,10 @@ def copyFile(oldFullPath, newFullPath):
 def getDir(item):
     index = item.rfind("/")
     return item[:index]
+
+
+def loadStr(fileName, filePath=None):
+    filePath = filePath is None and os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/static/"
+    logging.info("===> load dir is: {}".format(filePath + fileName))
+    with open(filePath + fileName, "r", encoding="utf-8") as file:
+        return "".join(file.readlines())

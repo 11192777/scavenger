@@ -2,9 +2,8 @@ import json
 import logging
 from itertools import groupby
 
-import CommonUtils
-import RandomUtils
-from FormServer import FormServer
+from server.FormServer import FormServer
+from utils import FileUtils, RandomUtils
 
 
 class FieldTemplate:
@@ -144,14 +143,12 @@ class FieldTemplate:
 
     def format_title_csv(self):
         titles = self.content.split('\n')[0]
-        logging.info("===> Field template title:{}".format(titles))
         title_csv = []
         for title in titles.split('\t'):
             if title == '':
                 continue
             else:
                 title_csv.append(title)
-        logging.info("===> Success obtain title csv:{}".format(title_csv))
         self.title_csv = title_csv
 
     def format_content_csv(self):
@@ -160,11 +157,9 @@ class FieldTemplate:
         rows = [row for row in rows if row.strip()]
         for row_num in range(1, len(rows)):
             items = rows[row_num].split('\t')
-            logging.info("===> Row:{} items:{}".format(row_num, items))
             content = {}
             for index in range(min(len(items), len(self.title_csv))):
                 content[self.title_csv[index]] = items[index]
-            logging.info("===> CSV obtain successfully:{}".format(content))
             content_csv.append(content)
         self.content_csv = content_csv
 
@@ -186,7 +181,7 @@ class FieldTemplate:
         sql = "DELETE FROM ea_form_field WHERE id BETWEEN '{}' AND '{}';\n\n".format(self.field_id - len(self.content_csv), self.field_id) + sql
         return sql
 
-    def get_java_enum(self):
+    def getFormEnum(self):
         line = '''\n
     /**
      * {}
@@ -195,117 +190,7 @@ class FieldTemplate:
         lines = []
         for form, fields in self.format_content():
             lines.append(line.format(form[1], form[0], form[0], form[1], self.get_business_type(form[2])))
-        java = '''package com.huilianyi.earchives.business.enumeration;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-/**
- * <p>
- * 字段模板枚举
- * </P>
- *
- * @Author Qingyu.Meng
- * @Date 2021/7/9 14:00
- * @Version 1.0
- */
-@Getter
-@AllArgsConstructor
-public enum FieldTemplateEnum {{{};
-
-
-    private final String code;
-    private final String name;
-    private final BusinessEnvironmentEnum businessEnvironment;
-
-    /**
-     * 根据key获取字段模板枚举
-     *
-     * @param code this.code
-     * @return FieldTemplateEnum
-     */
-    @Nullable
-    public static FieldTemplateEnum parseCode(String code) {{
-        if (StringUtils.isBlank(code)) {{
-            return null;
-        }}
-
-        for (FieldTemplateEnum fieldTemplateEnum : FieldTemplateEnum.values()) {{
-            if (fieldTemplateEnum.code.equals(code)) {{
-                return fieldTemplateEnum;
-            }}
-        }}
-
-        return null;
-    }}
-
-    /**
-     * 根据key获取字段模板枚举
-     *
-     * @param name this.key
-     * @return FieldTemplateEnum
-     */
-    @Nullable
-    public static FieldTemplateEnum parseName(String name) {{
-        if (StringUtils.isBlank(name)) {{
-            return null;
-        }}
-
-        for (FieldTemplateEnum fieldTemplateEnum : FieldTemplateEnum.values()) {{
-            if (fieldTemplateEnum.name.equals(name)) {{
-                return fieldTemplateEnum;
-            }}
-        }}
-
-        return null;
-    }}
-
-    /**
-     * 根据code获取name
-     *
-     * @param code this.code
-     * @return FieldTemplateEnum
-     */
-    @Nullable
-    public static String getNameByCode(String code) {{
-        FieldTemplateEnum fieldTemplateEnum = parseCode(code);
-        return fieldTemplateEnum == null ? null : fieldTemplateEnum.getName();
-    }}
-
-    /**
-     * 根据name获取code
-     *
-     * @param name this.name
-     * @return FieldTemplateEnum
-     */
-    @Nullable
-    public static String getCodeByName(String name) {{
-        FieldTemplateEnum fieldTemplateEnum = parseName(name);
-        return fieldTemplateEnum == null ? null : fieldTemplateEnum.getCode();
-    }}
-
-    /**
-     * <H2>获取业务环境下的模板</H2>
-     *
-     * @param businessEnv 业务环境
-     * @return {{@link java.util.Set<com.huilianyi.earchives.business.enumeration.FieldTemplateEnum>}}
-     * @author Qingyu.Meng
-     * @since 2022/8/31
-     */
-    public static Set<FieldTemplateEnum> getFieldTemplates(@NonNull BusinessEnvironmentEnum businessEnv) {{
-        return Arrays.stream(FieldTemplateEnum.values()).filter(template -> template.getBusinessEnvironment().equals(businessEnv)).collect(Collectors.toSet());
-    }}
-
-}}
-'''.format(",".join(lines))
-        return java
+        return FileUtils.loadStr("FormTemplateFormat").format(",".join(lines))
 
     def format_content(self):
         self.format_title_csv()
@@ -395,4 +280,4 @@ public class FieldTemplateEnum {{
         elif self.operator == "oracle":
             return self.get_sql()
         elif self.operator == "formEnum":
-            return self.get_java_enum()
+            return self.getFormEnum()

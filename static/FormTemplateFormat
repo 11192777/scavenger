@@ -1,0 +1,133 @@
+package com.huilianyi.earchives.business.enumeration;
+
+import cn.hutool.core.collection.CollUtil;
+import com.huilianyi.earchives.business.entity.FormDO;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ * <p>
+ * 表单模板枚举
+ * {{@link FormDO#getBusinessType()}}
+ * </P>
+ *
+ * @Author Qingyu.Meng
+ * @Date 2021/7/9 14:00
+ * @Version 1.0
+ */
+@Getter
+@AllArgsConstructor
+public enum FormTemplateEnum {{
+
+    {};
+
+    private final String code;
+    private final String name;
+    private final BusinessEnvironmentEnum businessEnvironment;
+
+    /**
+     * 根据key获取字段模板枚举
+     *
+     * @param code this.code
+     * @return FormTemplateEnum
+     */
+    @Nullable
+    public static FormTemplateEnum parseCode(String code) {{
+        if (StringUtils.isBlank(code)) {{
+            return null;
+        }}
+
+        for (FormTemplateEnum formTemplateEnum : FormTemplateEnum.values()) {{
+            if (formTemplateEnum.code.equals(code)) {{
+                return formTemplateEnum;
+            }}
+        }}
+
+        return null;
+    }}
+
+    /**
+     * 根据key获取字段模板枚举
+     *
+     * @param name this.key
+     * @return FormTemplateEnum
+     */
+    @Nullable
+    public static FormTemplateEnum parseName(String name) {{
+        if (StringUtils.isBlank(name)) {{
+            return null;
+        }}
+
+        for (FormTemplateEnum formTemplateEnum : FormTemplateEnum.values()) {{
+            if (formTemplateEnum.name.equals(name)) {{
+                return formTemplateEnum;
+            }}
+        }}
+
+        return null;
+    }}
+
+    /**
+     * 根据code获取name
+     *
+     * @param code this.code
+     * @return FormTemplateEnum
+     */
+    @Nullable
+    public static String getNameByCode(String code) {{
+        FormTemplateEnum formTemplateEnum = parseCode(code);
+        return formTemplateEnum == null ? null : formTemplateEnum.getName();
+    }}
+
+    /**
+     * 根据name获取code
+     *
+     * @param name this.name
+     * @return FormTemplateEnum
+     */
+    @Nullable
+    public static String getCodeByName(String name) {{
+        FormTemplateEnum formTemplateEnum = parseName(name);
+        return formTemplateEnum == null ? null : formTemplateEnum.getCode();
+    }}
+
+    /**
+     * <H2>获取业务环境下的模板</H2>
+     *
+     * @param businessEnv 业务环境
+     * @return {{@link java.util.Set< FormTemplateEnum >}}
+     * @author Qingyu.Meng
+     * @since 2022/8/31
+     */
+    public static Set<FormTemplateEnum> getFormTemplates(@NonNull BusinessEnvironmentEnum businessEnv) {{
+        return Arrays.stream(FormTemplateEnum.values()).filter(template -> template.getBusinessEnvironment().equals(businessEnv)).collect(Collectors.toSet());
+    }}
+
+
+    /**
+     * <H2>通过业务维度获取模板列表</H2>
+     *
+     * @param businessEnv 业务维度
+     * @return {{@link java.util.List<java.lang.String>}} 模板列表
+     * @author Qingyu.Meng
+     * @since 2022/10/26
+     */
+    public static @Nullable
+    List<FormTemplateEnum> listByBusinessEnv(BusinessEnvironmentEnum businessEnv) {{
+        if (Objects.isNull(businessEnv)) {{
+            return CollUtil.newArrayList();
+        }}
+
+
+        return Arrays.stream(FormTemplateEnum.values()).filter(e -> e.getBusinessEnvironment().equals(businessEnv)).collect(Collectors.toList());
+    }}
+}}

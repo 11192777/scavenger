@@ -3,8 +3,9 @@ import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from FieldTemplateServer import FieldTemplate
-from SqlAdapterServer import SqlAdapterServer
+from server.StrUtilServer import StrUtilServer
+from server.FieldTemplateServer import FieldTemplate
+from server.SqlAdapterServer import SqlAdapterServer
 
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
@@ -47,6 +48,17 @@ def attachmentUpload():
     f = request.files["file"]
     f.save("/desktop/" + f.filename)
     return jsonify(request.json)
+
+
+@app.route("/api/str_util/selector", methods=["get"])
+def strUtilSelector():
+    return app.response_class(response=json.dumps(StrUtilServer.apiSelector, ensure_ascii=False), status=200, mimetype=APPLICATION_JSON)
+
+
+@app.route("/api/str_util/execute", methods=["post"])
+def strUtilExecute():
+    executor = StrUtilServer(request.args["type"], request.data.decode('utf-8'))
+    return app.response_class(response=json.dumps(executor.execute(), ensure_ascii=False), status=200, mimetype=APPLICATION_TEXT)
 
 
 @app.route('/data', methods=['get', 'post'])
