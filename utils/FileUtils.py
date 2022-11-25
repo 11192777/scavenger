@@ -38,8 +38,14 @@ def getDir(item):
     return item[:index]
 
 
-def loadStr(fileName, filePath=None):
-    filePath = filePath is None and os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/static/"
+def loadStr(fileName, begin=None, end=None):
+    filePath = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/static/"
     logging.info("===> load dir is: {}".format(filePath + fileName))
     with open(filePath + fileName, "r", encoding="utf-8") as file:
-        return "".join(file.readlines())
+        lines = file.readlines()
+        if begin is None and end is None:
+            return "".join(lines)
+        begin = begin is None and 0 or max(0, begin - 1)
+        end = end is None and len(lines) or min(len(lines), end)
+        return "".join(lines[begin:end])
+

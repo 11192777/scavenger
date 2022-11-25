@@ -1,0 +1,43 @@
+package com.huilianyi.earchives.business.enumeration;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.annotation.Nullable;
+
+/**
+ * <H1>模板字段枚举</H1>
+ *
+ * @author Qingyu.Meng
+ * @version 1.0
+ * @date 2022/11/3 11:15
+ */
+public class FieldTemplateEnum {{
+    {}
+}}
+
+
+    @Getter
+    @AllArgsConstructor
+    public enum {} {{
+
+        {}
+
+        private final String code;
+        private final String name;
+
+        public static @Nullable {} parseCode(@Nullable String code) {{
+            if (StringUtils.isEmpty(code)) {{
+                return null;
+            }}
+            for ({} value : values()) {{
+                if (value.getCode().equals(code)) {{
+                    return value;
+                }}
+            }}
+            return null;
+        }}
+    }}
+
+

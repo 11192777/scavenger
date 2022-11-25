@@ -6,12 +6,12 @@ from server.FormServer import FormServer
 from utils import FileUtils, RandomUtils
 
 
-class FieldTemplate:
+class OcrTemplateServer:
     apiSelector = [
         {"name": "生成mysql脚本", "param": "mysql"},
         {"name": "生成oracle脚本", "param": "oracle"},
-        {"name": "生成form enum", "param": "formEnum"},
-        {"name": "生成field enum", "param": "fieldEnum"}
+        # {"name": "生成form enum", "param": "formEnum"},
+        # {"name": "生成field enum", "param": "fieldEnum"}
     ]
 
     def __init__(self, content: str, operator):
@@ -167,11 +167,12 @@ class FieldTemplate:
         sql = ''
         form_id = 10
 
-        for form, fields in self.format_content():
+        for template, fields in self.format_content():
+            print(self.format_content())
             if self.operator == "mysql":
-                sql = sql + "# {}字段模板\n".format(form[1])
+                sql = sql + "# {}字段模板\n".format(template[1])
             sql = sql + self.get_form_sql(form_id)
-            sql = sql + self.get_insert_form_sql(form_id, form[0], form[1], self.get_business_type(form[2]))
+            sql = sql + self.get_insert_form_sql(form_id, template[0], template[1], self.get_business_type(template[2]))
             field_sort_number = 0
             for field in list(fields):
                 sql = sql + self.get_insert_field_sql(field, form_id, field_sort_number)
@@ -195,8 +196,8 @@ class FieldTemplate:
     def format_content(self):
         self.format_title_csv()
         self.format_content_csv()
-        sorted(self.content_csv, key=lambda line: (line["资料类型编码*"], line["资料名称*"], line["模板类型"]))
-        return groupby(self.content_csv, key=lambda line: (line["资料类型编码*"], line["资料名称*"], line["模板类型"]))
+        sorted(self.content_csv, key=lambda line: (line["OCR模版"]))
+        return groupby(self.content_csv, key=lambda line: (line["OCR模版"]))
 
     def field_template_test(self, url, token):
         form_server = FormServer(env_url=url, token=token)
