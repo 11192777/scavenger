@@ -3,7 +3,7 @@ import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-import OcrTemplateServer
+from server.OcrTemplateServer import OcrTemplateServer
 from server.StrUtilServer import StrUtilServer
 from server.FieldTemplateServer import FieldTemplate
 from server.SqlAdapterServer import SqlAdapterServer
@@ -18,7 +18,8 @@ APPLICATION_TEXT = "application/txt"
 
 @app.route("/api/field_template/selector", methods=["get"])
 def fieldTemplateSelector():
-    return app.response_class(response=json.dumps(FieldTemplate.apiSelector, ensure_ascii=False), status=200, mimetype=APPLICATION_JSON)
+    return app.response_class(response=json.dumps(FieldTemplate.apiSelector, ensure_ascii=False), status=200,
+                              mimetype=APPLICATION_JSON)
 
 
 @app.route("/api/field_template/execute", methods=["post"])
@@ -26,9 +27,11 @@ def fieldTemplateExecute():
     executor = FieldTemplate(content=request.data.decode('utf-8'), operator=request.args["type"])
     return app.response_class(response=executor.execute(), status=200, mimetype=APPLICATION_TEXT)
 
+
 @app.route("/api/ocr_template/selector", methods=["get"])
 def ocrTemplateSelector():
-    return app.response_class(response=json.dumps(OcrTemplateServer.apiSelector, ensure_ascii=False), status=200, mimetype=APPLICATION_JSON)
+    return app.response_class(response=json.dumps(OcrTemplateServer.apiSelector, ensure_ascii=False), status=200,
+                              mimetype=APPLICATION_JSON)
 
 
 @app.route("/api/ocr_template/execute", methods=["post"])
@@ -37,16 +40,17 @@ def ocrTemplateExecute():
     return app.response_class(response=executor.execute(), status=200, mimetype=APPLICATION_TEXT)
 
 
-
 @app.route("/api/sql_adapter/selector", methods=["get"])
 def sqlAdapterSelector():
-    return app.response_class(response=json.dumps(SqlAdapterServer.apiSelector, ensure_ascii=False), status=200, mimetype=APPLICATION_JSON)
+    return app.response_class(response=json.dumps(SqlAdapterServer.apiSelector, ensure_ascii=False), status=200,
+                              mimetype=APPLICATION_JSON)
 
 
 @app.route("/api/sql_adapter/execute", methods=["post"])
 def sqlAdapterExecute():
     executor = SqlAdapterServer(request.args["type"], request.data.decode('utf-8'))
-    return app.response_class(response=json.dumps(executor.execute(), ensure_ascii=False), status=200, mimetype=APPLICATION_TEXT)
+    return app.response_class(response=json.dumps(executor.execute(), ensure_ascii=False), status=200,
+                              mimetype=APPLICATION_TEXT)
 
 
 @app.route("/filed_template/test", methods=["get", "post"])
@@ -64,13 +68,15 @@ def attachmentUpload():
 
 @app.route("/api/str_util/selector", methods=["get"])
 def strUtilSelector():
-    return app.response_class(response=json.dumps(StrUtilServer.apiSelector, ensure_ascii=False), status=200, mimetype=APPLICATION_JSON)
+    return app.response_class(response=json.dumps(StrUtilServer.apiSelector, ensure_ascii=False), status=200,
+                              mimetype=APPLICATION_JSON)
 
 
 @app.route("/api/str_util/execute", methods=["post"])
 def strUtilExecute():
     executor = StrUtilServer(request.args["type"], request.data.decode('utf-8'))
-    return app.response_class(response=json.dumps(executor.execute(), ensure_ascii=False), status=200, mimetype=APPLICATION_TEXT)
+    return app.response_class(response=json.dumps(executor.execute(), ensure_ascii=False), status=200,
+                              mimetype=APPLICATION_TEXT)
 
 
 @app.route('/data', methods=['get', 'post'])
