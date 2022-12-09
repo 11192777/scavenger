@@ -7,5 +7,5 @@ const USER_AUTHORITY = {
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  BASE_API: '"http://192.168.3.2:9999"',
+  BASE_API: '"http://192.168.1.104:9999"',
 })
