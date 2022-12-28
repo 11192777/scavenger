@@ -127,12 +127,12 @@ class FieldTemplate:
     def get_insert_field_sql(self, field, form_id, field_sort_number):
         self.field_id = self.field_id + 1
         if self.operator == "mysql":
-            return "INSERT INTO ea_form_field (id, name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property, is_template_field) " \
-                   "VALUES ({}, '{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}', TRUE);\n" \
+            return "INSERT INTO ea_form_field (id, name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property, is_template_field, is_digest) " \
+                   "VALUES ({}, '{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}', TRUE, FALSE);\n" \
                 .format(self.field_id, field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持接口同步数据编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
         else:
-            return "INSERT INTO ea_form_field (id, name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property, is_template_field) " \
-                   "VALUES ({}, '{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}', '1');\n" \
+            return "INSERT INTO ea_form_field (id, name, code, form_id, widget_type, sort_number, required, volume_primary_key, input_manually, tenant_id, created_date, last_modified_date, created_by, last_modified_by, widget_type_property, is_template_field, is_digest) " \
+                   "VALUES ({}, '{}', '{}', '{}', '{}', {}, {}, {}, {}, '-1', {}, {},  '-1', '-1', '{}', '1', '0');\n" \
                 .format(self.field_id, field["字段名称*"], field["字段编码*"], form_id, self.get_field_widget_type(field["类型*"]), field_sort_number, self.get_boolean(field["是否必填*"]), self.get_boolean(field["是否成册主键"]), self.get_boolean(field["是否支持接口同步数据编辑*"]), self.get_now_time(), self.get_now_time(), str(self.get_field_widget_type_property(field)).replace(" ", ""))
 
     def get_now_time(self):

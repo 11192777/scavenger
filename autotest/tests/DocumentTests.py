@@ -1,15 +1,15 @@
-import LoginServer
-import RandomUtils
-import ResponseUtil
-from DocumentServer import DocumentServer
-from FormFieldServer import FormFieldServer
-from FormServer import FormServer
+import server.LoginServer
+import utils.RandomUtils
+import utils.ResponseUtil
+from server.DocumentServer import DocumentServer
+from server.FormFieldServer import FormFieldServer
+from server.FormServer import FormServer
 
 import unittest
 
-from HermesServer import HermesServer
+from server.HermesServer import HermesServer
 
-ENV = LoginServer.local_private_sit_16660000000()
+ENV = server.LoginServer.local_private_sit_16660000000()
 
 if __name__ == '__main__':
     unittest.main()

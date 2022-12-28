@@ -1,16 +1,16 @@
 from datetime import time
 
-import DocumentTests
-import FormTests
-import LoginServer
-import RandomUtils
+import autotest.tests.DocumentTests
+import autotest.tests.FormTests
+import server.LoginServer
+import utils.RandomUtils
 import ResponseUtil
-from FormFieldServer import FormFieldServer
-from FormServer import FormServer
+from server.FormFieldServer import FormFieldServer
+from server.FormServer import FormServer
 
 import unittest
 
-ENV = LoginServer.private_sit_16660000000()
+ENV = server.LoginServer.private_sit_16660000000()
 
 
 class ArchiveTypeTests(unittest.TestCase):
