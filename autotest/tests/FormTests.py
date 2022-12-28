@@ -1,14 +1,12 @@
 from datetime import time
 
-import autotest.tests.DocumentTests
-import autotest.tests.FormTests
 import server.LoginServer
-import utils.RandomUtils
-import ResponseUtil
 from server.FormFieldServer import FormFieldServer
 from server.FormServer import FormServer
 
 import unittest
+
+from utils import ResponseUtil, RandomUtils
 
 ENV = server.LoginServer.private_sit_16660000000()
 
