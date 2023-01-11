@@ -109,7 +109,13 @@ class FieldTemplate:
         elif widget_type == "INTEGER" or widget_type == "DOUBLE":
             widget_type_property = {"MIN_VALUE": str(field["格式范围"]).split("_")[0], "MAX_VALUE": str(field["格式范围"]).split("_")[1]}
         elif widget_type == "DATE":
-            widget_type_property = {"DATE_FORMAT": "yyyy-MM-dd", "DATE_FORMAT_WEB": "YYYY-MM-DD"}
+            data_format = str(field["格式范围"])
+            if data_format == 'yyyy':
+                widget_type_property = {"DATE_FORMAT": "yyyy", "DATE_FORMAT_WEB": "YYYY"}
+            elif data_format == 'yyyy-MM-dd':
+                widget_type_property = {"DATE_FORMAT": "yyyy-MM-dd", "DATE_FORMAT_WEB": "YYYY-MM-DD"}
+            else:
+                widget_type_property = {"DATE_FORMAT": "yyyy-MM-dd", "DATE_FORMAT_WEB": RandomUtils.random_str(1000)}
         elif widget_type == "TEXT_ARRAY":
             widget_type_property = {"ITEM_WORDS_LIMIT": str(field["格式范围"]).split("/")[1], "ITEMS_LIMIT": str(field["格式范围"]).split("/")[0]}
         else:
