@@ -122,14 +122,6 @@ class FieldTemplate:
             return None
         return json.dumps(widget_type_property)
 
-    def get_form_sql(self, form_id):
-        if self.operator == "mysql":
-            return '''DELETE FROM ea_form WHERE id = '{}';  # 删除模板
-'''.format(form_id)
-        else:
-            return '''DELETE FROM ea_form WHERE id = '{}';
-'''.format(form_id)
-
     def get_insert_field_sql(self, field, form_id, field_sort_number):
         self.field_id = self.field_id + 1
         if self.operator == "mysql":
@@ -170,13 +162,12 @@ class FieldTemplate:
         self.content_csv = content_csv
 
     def get_sql(self):
-        sql = ''
+        sql = "DELETE FROM ea_form_field WHERE form_id IN (SELECT id FROM ea_form WHERE type = 'DOCUMENT_TYPE_FIELD_TEMPLATE');\nDELETE FROM ea_form WHERE type = 'DOCUMENT_TYPE_FIELD_TEMPLATE';\n\n"
         form_id = 10
 
         for form, fields in self.format_content():
             if self.operator == "mysql":
                 sql = sql + "# {}字段模板\n".format(form[1])
-            sql = sql + self.get_form_sql(form_id)
             sql = sql + self.get_insert_form_sql(form_id, form[0], form[1], self.get_business_type(form[2]))
             field_sort_number = 0
             for field in list(fields):
@@ -184,7 +175,6 @@ class FieldTemplate:
                 field_sort_number = field_sort_number + 1
             form_id = form_id + 1
             sql = sql + "\n\n"
-        sql = "DELETE FROM ea_form_field WHERE id BETWEEN '{}' AND '{}';\n\n".format(self.field_id - len(self.content_csv), self.field_id) + sql
         return sql
 
     def getFormEnum(self):
