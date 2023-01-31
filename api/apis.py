@@ -3,6 +3,7 @@ import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+from server.WorkTicketServer import WorkTicketServer
 from server.OcrTemplateServer import OcrTemplateServer
 from server.StrUtilServer import StrUtilServer
 from server.FieldTemplateServer import FieldTemplate
@@ -14,6 +15,18 @@ CORS(app, resources=r'/*')
 
 APPLICATION_JSON = "application/json;charset=UTF-8"
 APPLICATION_TEXT = "application/txt"
+
+
+@app.route("/api/work_ticket/selector", methods=["get"])
+def workTicketSelector():
+    return app.response_class(response=json.dumps(WorkTicketServer.apiSelector, ensure_ascii=False), status=200,
+                              mimetype=APPLICATION_JSON)
+
+
+@app.route("/api/work_ticket/execute", methods=["post"])
+def workTicketExecute():
+    executor = WorkTicketServer(content=request.data.decode('utf-8'), operator=request.args["type"])
+    return app.response_class(response=executor.execute(), status=200, mimetype=APPLICATION_TEXT)
 
 
 @app.route("/api/field_template/selector", methods=["get"])

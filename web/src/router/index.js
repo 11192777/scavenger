@@ -53,6 +53,12 @@ export const constantRouterMap = [
         meta: {title: '字段模板', icon: 'table'}
       },
       {
+        path: 'workTicket',
+        name: 'workTicket',
+        component: () => import('@/views/scripts/workTicket'),
+        meta: { title: '工单生成', icon: 'table' }
+      },
+      {
         path: 'sqlAdapter',
         name: 'sqlAdapter',
         component: () => import('@/views/scripts/sqlAdapter'),

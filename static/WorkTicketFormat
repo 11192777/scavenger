@@ -1,0 +1,10 @@
+UPDATE
+    ea_form                     ef
+    INNER JOIN ea_form_field    eff ON ef.id = eff.form_id
+SET
+    eff.last_modified_by     = '{}',
+    eff.widget_type_property = '{}'
+WHERE
+    ef.is_deleted = 0 AND eff.is_deleted = 0 AND ef.tenant_id = '{}'
+    AND ef.code IN ({})
+    AND eff.code IN ({})
