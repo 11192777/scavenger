@@ -111,7 +111,7 @@ class FieldTemplate:
         elif widget_type == "DATE":
             data_format = str(field["格式范围"])
             if data_format == 'yyyy':
-                widget_type_property = {"DATE_FORMAT": "yyyy", "DATE_FORMAT_WEB": "YYYY"}
+                widget_type_property = {"DATE_FORMAT": "yyyy", "DATE_FORMAT_WEB": "yyyy"}
             elif data_format == 'yyyy-MM-dd':
                 widget_type_property = {"DATE_FORMAT": "yyyy-MM-dd", "DATE_FORMAT_WEB": "YYYY-MM-DD"}
             else:
