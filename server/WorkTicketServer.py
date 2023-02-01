@@ -36,5 +36,5 @@ class WorkTicketServer:
                                                                       self.content["formCodes"].split(',')]),
                                                             ",".join(["'{}'".format(item) for item in
                                                                       self.content["fieldCodes"].split(',')]))
-        FileUtils.appendLog("WorkTicketLog", time.strftime("%Y-%m-%d %H%M%S:", time.localtime()) + targetSql)
+        FileUtils.appendLog("WorkTicketLog", time.strftime("==========> %Y-%m-%d %H:%M:%S\n", time.localtime()) + targetSql + "\n<==========\n\n")
         return targetSql

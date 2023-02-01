@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-select v-model="sqlAdapterOperator" placeholder="类型" class="filter-item" style="width: 150px; margin-left: 1%;">
+      <el-select v-model="sqlAdapterOperator" placeholder="类型" class="filter-item" style="margin-left: 1%;">
         <el-option v-for="item in sqlAdapterSelectorItems" :key="item" :label="item" :value="item"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" @click="execute" icon="el-icon-caret-right" style="margin-left: 1%;">执行</el-button>
