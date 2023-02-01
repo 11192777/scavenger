@@ -49,3 +49,8 @@ def loadStr(fileName, begin=None, end=None):
         end = end is None and len(lines) or min(len(lines), end)
         return "".join(lines[begin:end])
 
+def appendLog(fileName, text):
+    filePath = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/log/" + fileName
+    logging.info("===> log dir is: {}".format(filePath))
+    f = open(filePath, "a+", encoding="utf-8")
+    f.write(text + "\n")
