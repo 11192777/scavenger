@@ -2,8 +2,7 @@ import json
 
 import requests
 
-import RandomUtils
-from ArchiveResult import ArchiveResult
+from common.ArchiveResult import ArchiveResult
 
 
 class CategoryServer:

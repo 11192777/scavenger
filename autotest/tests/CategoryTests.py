@@ -1,14 +1,11 @@
-import json
 import unittest
 
-import requests
 
-import LoginServer
-import RandomUtils
-import ResponseUtil
-from CategoryServer import CategoryServer
+from server import LoginServer
+from server.CategoryServer import CategoryServer
+from utils import RandomUtils, ResponseUtil
 
-ENV = LoginServer.local_private_dev_11192777()w
+ENV = LoginServer.local_private_dev_11192777()
 
 
 class CategoryTests(unittest.TestCase):
