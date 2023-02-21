@@ -1,7 +1,7 @@
 import base64
 import unittest
 
-from MySqlHelper import MysqlDb
+from utils.MySqlHelper import MysqlDb
 
 
 class CategoryScripts(unittest.TestCase):
@@ -75,3 +75,8 @@ class CategoryScripts(unittest.TestCase):
             print("ALTER TABLE ea_archive_{} ADD COLUMN year int NOT NULL DEFAULT '1970' COMMENT '年份';".format(code))
             print("CREATE INDEX idx_projectId ON ea_archive_{} (project_id);".format(code))
             print("\n")
+
+    def test_资料表增加排序号(self):
+        for item in self.categories:
+            code = str(item["code"]).replace("-", "_").lower()
+            print("ALTER TABLE ea_document_{} ADD COLUMN sort_number int NOT NULL DEFAULT '2147483647' COMMENT '顺序号';".format(code))
