@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+
 # 项目根路径
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print(BASE_PATH)

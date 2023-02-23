@@ -1,4 +1,6 @@
 # 服务端口配置
+import os
+
 SERVER_PORT = 9999
 
 # MySQL配置
@@ -17,3 +19,5 @@ EXPIRE_TIME = 600
 
 # MD5加密盐值
 MD5_SALT = "Hlks&&ssb#%*"
+
+STATIC_RESOURCE_DIR = os.environ.get("STATIC_RESOURCE_DIR")

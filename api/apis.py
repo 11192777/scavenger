@@ -1,13 +1,18 @@
 import json
+import logging
+import os
+import uuid
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+from server import StaticFileServer
 from server.WorkTicketServer import WorkTicketServer
 from server.OcrTemplateServer import OcrTemplateServer
 from server.StrUtilServer import StrUtilServer
 from server.FieldTemplateServer import FieldTemplate
 from server.SqlAdapterServer import SqlAdapterServer
+from config.setting import STATIC_RESOURCE_DIR
 
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
@@ -74,9 +79,9 @@ def field_template_test():
 
 @app.route("/api/attachment/upload", methods=["post"])
 def attachmentUpload():
-    f = request.files["file"]
-    f.save("/desktop/" + f.filename)
-    return jsonify(request.json)
+    file = request.files["file"]
+    StaticFileServer.save(file)
+    return app.response_class(response=json.dumps({"status": "SUCCESS"}, ensure_ascii=False), status=200, mimetype=APPLICATION_JSON)
 
 
 @app.route("/api/str_util/selector", methods=["get"])
