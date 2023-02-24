@@ -8,3 +8,15 @@ WHERE
     ef.is_deleted = 0 AND eff.is_deleted = 0 AND ef.tenant_id = '{}'
     AND ef.code IN ({})
     AND eff.code IN ({})
+
+
+SELECT
+    ef.code AS formCode, ef.name AS formName, eff.code AS fieldCode, eff.name AS fieldName,
+    eff.widget_type AS fieldType, eff.widget_type_property AS fieldProperty, eff.tenant_id
+FROM
+    ea_form                     ef
+    INNER JOIN ea_form_field    eff ON ef.id = eff.form_id
+WHERE
+    ef.is_deleted = 0 AND eff.is_deleted = 0 AND ef.tenant_id = '{}'
+    AND ef.code IN ({})
+    AND eff.code IN ({})
