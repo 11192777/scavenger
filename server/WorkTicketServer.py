@@ -39,10 +39,10 @@ class WorkTicketServer:
 
     def generate(self, widgetTypeProperty):
         properties = str({key: value for key, value in widgetTypeProperty.items() if value is not None}).replace(" ", "").replace("'", '"')
-        selectSql = FileUtils.loadStr("WorkTicketFormat", 13, 21).format(self.tenantId, self.formCodes, self.fieldCodes)
+        selectSql = FileUtils.loadStr("WorkTicketFormat", 13, 22).format(self.tenantId, self.formCodes, self.fieldCodes)
         updateSql = FileUtils.loadStr("WorkTicketFormat", 1, 10).format(self.lastModifyDate, properties, self.tenantId, self.formCodes, self.fieldCodes)
         FileUtils.appendLog("WorkTicketLog", time.strftime("==========> %Y-%m-%d %H:%M:%S\n", time.localtime()) + updateSql + "\n<==========\n\n")
-        return "{}\n\n\n\n\n{}".format(selectSql, updateSql)
+        return "{}\n\n\n\n{}".format(selectSql, updateSql)
 
 
 if __name__ == '__main__':
