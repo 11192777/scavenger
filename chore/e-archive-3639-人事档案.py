@@ -13,7 +13,7 @@ def formatTime(timeStr):
 
 
 if __name__ == '__main__':
-    with open("/Users/vicoko/workspace/pycharm/scavenger/chore/personnel", "r", encoding="utf-8") as file:
+    with open("/Users/vicoko/workspace/pycharm/scavenger/chore/PersonnelInfo", "r", encoding="utf-8") as file:
         for line in file.readlines():
             items = line.split("\t")
             data = {

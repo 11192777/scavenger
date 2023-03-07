@@ -4,7 +4,7 @@ import jsonpath
 import re
 
 if __name__ == '__main__':
-    path = "/Users/vicoko/workspace/pycharm/scavenger/chore/info.log"
+    path = "/Users/oicoko/workspace/pycharm/scavenger/chore/info.log"
     lines = []
     a = 0
 
@@ -15,7 +15,7 @@ if __name__ == '__main__':
                 pri = item["primaryField"]
                 for att in item["attachmentList"]:
                     if "attachmentOID" not in att:
-                        if "fund.mobvista" in att["fileURL"]:
+                        # if "fund.mobvista" in att["fileURL"]:
                             if "fileName" not in att:
                                 continue
                             filename = att["fileName"]
