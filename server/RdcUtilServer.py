@@ -2,29 +2,27 @@ import json
 
 import requests
 
-token = "bearer eca87b5e-dbd2-4829-8d75-5911cbe92ff5"
+token = "bearer 182d43de-81e0-4f59-9c4c-1052d9202e87"
 
 # 开发 355006354336911360
 # 测试 355006374733811712
-taskType = "355006374733811712"
+taskType = 355006354336911360
 
 forms = '''
 e-archive-4201
-e-archive-4202
 e-archive-4415
 e-archive-4415
-e-archive-4443
-e-archive-4444
-e-archive-4430
-e-archive-4473
-e-archive-4436
-e-archive-4435
-e-archive-4458
-e-archive-4472
+e-archive-4416
+e-archive-4417
+e-archive-4475
+e-archive-4445
+e-archive-4450
+e-archive-4457
+e-archive-4476
+e-archive-4461
 e-archive-4462
-e-archive-4471
-e-archive-4279
 e-archive-4489
+e-archive-4516
 '''
 
 
@@ -55,7 +53,7 @@ def createSub(code):
     searchUrl = "https://c7n-api.huilianyi.com/agile/v1/projects/172811994888671232/issues/include_sub?page=0&size=10"
     result = requests.post(url=searchUrl, data=json.dumps(search), headers=headers, allow_redirects=False).json()["content"][0]
     subTask = {
-        "summary": str(result["summary"]).replace("柯彦钦", meName).replace("刘雪婷", meName),
+        "summary": "【{}】".format(meName) + str(result["summary"]),
         "projectId": result["projectId"],
         "priorityId": result["priorityVO"]["id"],
         "parentIssueId": result["issueId"],
@@ -83,4 +81,4 @@ def createSub(code):
 if __name__ == '__main__':
     for line in forms.splitlines():
         if line.startswith("e-archive"):
-            print(line.replace("\n", ""))
+            createSub(line)
