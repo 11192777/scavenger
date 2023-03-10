@@ -3,10 +3,10 @@ import json
 import jsonpath
 import requests
 
-import RandomUtils
-from ArchiveResult import ArchiveResult
 from FormServer import FormServer
 from HermesServer import HermesServer
+from common.ArchiveResult import ArchiveResult
+from utils import RandomUtils
 
 
 class DocumentServer:

@@ -2,8 +2,8 @@ import base64
 
 import requests
 
-from ArchiveResult import ArchiveResult
-from MySqlHelper import MysqlDb
+from common.ArchiveResult import ArchiveResult
+from utils.MySqlHelper import MysqlDb
 
 
 class FormFieldServer:

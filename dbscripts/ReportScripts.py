@@ -1,8 +1,7 @@
 import random
 import threading
 
-import RandomUtils
-from MySqlHelper import MysqlDb
+from utils.MySqlHelper import MysqlDb
 
 
 def getNull():

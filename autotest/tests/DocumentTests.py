@@ -1,6 +1,4 @@
 import server.LoginServer
-import utils.RandomUtils
-import utils.ResponseUtil
 from server.DocumentServer import DocumentServer
 from server.FormFieldServer import FormFieldServer
 from server.FormServer import FormServer
@@ -8,6 +6,7 @@ from server.FormServer import FormServer
 import unittest
 
 from server.HermesServer import HermesServer
+from utils import ResponseUtil
 
 ENV = server.LoginServer.local_private_sit_16660000000()
 

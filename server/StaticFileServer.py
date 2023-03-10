@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import socket
 import uuid
 
 import requests

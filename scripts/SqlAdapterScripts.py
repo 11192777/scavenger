@@ -7,7 +7,7 @@ import unittest
 import jsonpath
 from sqlalchemy.dialects import mysql
 
-from MySqlHelper import MysqlDb
+from utils.MySqlHelper import MysqlDb
 
 ignoreList = ["20220823115878", "20220826113000", "2022091509270001"]
 

@@ -6,11 +6,11 @@ import uuid
 
 import jsonpath
 
-import RandomUtils
 from DocumentServer import DocumentServer
 from FormFieldServer import FormFieldServer
 from FormServer import FormServer
 from HermesServer import HermesServer
+from utils import RandomUtils
 
 
 class DataBuilder(threading.Thread):

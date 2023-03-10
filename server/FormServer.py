@@ -2,8 +2,8 @@ import json
 
 import requests
 
-import utils.RandomUtils
 from common.ArchiveResult import ArchiveResult
+from utils import RandomUtils
 
 
 class FormServer:

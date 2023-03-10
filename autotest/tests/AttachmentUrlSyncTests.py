@@ -1,13 +1,7 @@
-import json
 import unittest
 
-import requests
-
-import LoginServer
-import RandomUtils
-import ResponseUtil
-from AttachmentUrlSyncServer import AttachmentUrlSyncServer
-from CategoryServer import CategoryServer
+from server import LoginServer
+from server.AttachmentUrlSyncServer import AttachmentUrlSyncServer
 
 ENV = LoginServer.local_private_sit_16660000000()
 

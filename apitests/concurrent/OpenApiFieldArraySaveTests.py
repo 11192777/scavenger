@@ -1,9 +1,9 @@
 import threading
 import uuid
 
-import LoginServer
-import RandomUtils
-from DocumentServer import DocumentServer
+from server import LoginServer
+from server.DocumentServer import DocumentServer
+from utils import RandomUtils
 
 ENV = LoginServer.local_private_sit_16660000000()
 

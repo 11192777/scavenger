@@ -1,12 +1,9 @@
 import base64
 import json
 
-import requests
 from jsonpath import jsonpath
 
-import RandomUtils
-from ArchiveResult import ArchiveResult
-from MySqlHelper import MysqlDb
+from utils.MySqlHelper import MysqlDb
 
 
 class AttachmentUrlSyncServer:

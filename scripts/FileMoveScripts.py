@@ -1,7 +1,7 @@
 import os
 import re
 
-import FileUtils
+from utils import FileUtils
 
 hitFileSet = set()
 baseDir = "/Users/vicoko/workspace/idea/sql-adapter/src/main/java/{}.java"
