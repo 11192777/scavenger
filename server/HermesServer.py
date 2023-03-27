@@ -1,7 +1,6 @@
 import requests
 
 
-
 class HermesServer:
     def __init__(self, env):
         self.comapnies = None
