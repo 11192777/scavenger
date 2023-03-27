@@ -80,3 +80,9 @@ class CategoryScripts(unittest.TestCase):
         for item in self.categories:
             code = str(item["code"]).replace("-", "_").lower()
             print("ALTER TABLE ea_document_{} ADD COLUMN sort_number int NOT NULL DEFAULT '2147483647' COMMENT '顺序号';".format(code))
+
+
+    def test_档案表增加部门id(self):
+        for item in self.categories:
+            code = str(item["code"]).replace("-", "_").lower()
+            print("ALTER TABLE ea_archive_{} ADD department_id bigint NULL COMMENT '部门id';".format(code))
