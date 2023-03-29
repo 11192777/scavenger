@@ -9,6 +9,7 @@ class HermesMenuScripts:
         self.hermes = MySqlHelper.MysqlDb('hly-uatmask-polardb.mysql.polardb.rds.aliyuncs.com', 3306, 'artemis', base64.b64decode('USF3MmUzcjR0NVle'), 'hermes')
         self.resourceIds = []
         self.sqls = []
+        self.keys = []
 
     def listAllMenuByNames(self, names):
         sql = '''
@@ -77,15 +78,22 @@ UPDATE art_resource_detail SET parent_id = {}, resource_name = '{}', resource_ty
             menu["key"],
         )
         self.sqls.append({"key": menu["resource_id"] * 100000000000 + menu["resource_order"], "sql": resultSql})
+        self.keys.append({"key": menu["key"], "name": menu["resource_name"]})
         self.resourceIds.append(menu["resource_id"])
 
-    def printMenuScripts(self, resourceNames):
+    def build(self, resourceNames):
         names = ["'{}'".format(item) for item in resourceNames]
         for menu in self.listAllMenuByNames(names):
             self.loopMenusSql(menu)
         sorted(self.sqls, key=lambda u: u["key"])
+
+    def printSqlScripts(self):
         for sqlItem in self.sqls:
             print(sqlItem["sql"])
+
+    def printMenuEnums(self):
+        for key in self.keys:
+            print('{}("{}", {}), \n'.format(str.upper(key["key"]).replace("-", "_"), key["key"], key["name"]))
 
 
 if __name__ == '__main__':
@@ -115,6 +123,6 @@ E档案保留的功能范围：
     resourceNames = []
     for item in re.findall(r'包括：(.+?)[\s+]', resourceVar):
         resourceNames = resourceNames + item.split('、')
-    print(resourceNames)
     hermes = HermesMenuScripts()
-    hermes.printMenuScripts(resourceNames)
+    hermes.build(resourceNames)
+    hermes.printMenuEnums()
