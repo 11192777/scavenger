@@ -93,12 +93,14 @@ UPDATE art_resource_detail SET parent_id = {}, resource_name = '{}', resource_ty
 
     def printMenuEnums(self):
         for key in self.keys:
-            print('{}("{}", {}), \n'.format(str.upper(key["key"]).replace("-", "_"), key["key"], key["name"]))
+            print('{}("{}", "{}"),'.format(str.upper(key["key"]).replace("-", "_"), key["key"], key["name"]))
 
 
 if __name__ == '__main__':
     resourceVar = '''
 E档案保留的功能范围：
+
+公共菜单：管理员首页、快捷设置中心
 
 1、档案管理所有功能，包括：资料归集、立卷成册、卷册管理、装盒入库
 
@@ -106,7 +108,7 @@ E档案保留的功能范围：
 
 3、档案借阅部分功能，包括：电子借阅、实物借阅、归还登记、借阅查询
 
-4、综合查询部分功能，包括：资料查询、卷册查询、目录检索、档案调阅
+4、综合查询部分功能，包括：资料查询、卷册查询、目录检索、档案调阅、四性检测
 
 5、在线审计不保留功能
 
@@ -114,14 +116,18 @@ E档案保留的功能范围：
 
 7、基础配置部分功能，包括：资料类型、完整性规则、调阅模板、档案名称配置、审批流设置
 
-8、权限管理部分功能，包括：公司管理、用户管理、角色管理
+8、权限管理部分功能，包括：公司管理、用户管理、部门管理、角色管理
 
 9、操作日志所有功能，包括：任务设置、任务日志、安全审计、系统监测、资料回收站、档案更新
 
 10、租户管理部分功能，包括：其他设置、租户详情
+
+11、智能验签所有功能，包括：验签配置、验签结果、档案生态
+
+12、流程审批部分功能，包括：鉴定审批
         '''
     resourceNames = []
-    for item in re.findall(r'包括：(.+?)[\s+]', resourceVar):
+    for item in re.findall(r'[(包括)(公共菜单)]：(.+?)[\s+]', resourceVar):
         resourceNames = resourceNames + item.split('、')
     hermes = HermesMenuScripts()
     hermes.build(resourceNames)
