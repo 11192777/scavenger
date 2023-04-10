@@ -1,5 +1,4 @@
 import json
-import logging
 
 import requests
 
@@ -45,8 +44,10 @@ class RdcUtilServer:
         }
         return requests.post(url=url, data=json.dumps(search), headers=self.headers, allow_redirects=False).json()["content"][0]
 
-    def saveSubTask(self, taskCode, taskTypeName):
+    def saveSubTask(self, taskCode, taskTypeName, associateName=None):
         taskInfo = self.queryTaskByCode(taskCode)
+        if associateName:
+            self.initMeInfoByUserName(associateName)
         print(self.getMeName())
         subTask = {
             "summary": "【{}】".format(self.getMeName()) + str(taskInfo["summary"]),
@@ -133,3 +134,11 @@ class RdcUtilServer:
             userIds.append(self.getUserIdByName(items[2]))
         version = self.getNextTaskVersionNumber(taskId=taskId)
         self.updateAssociateMember(taskId=taskId, version=version, userIds=userIds)
+
+    def initMeInfoByUserName(self, associateName):
+        meInfo = {
+            "realName": associateName,
+            "id": self.getUserIdByName(associateName)
+        }
+        self.meInfo = meInfo
+

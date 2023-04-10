@@ -11,18 +11,18 @@ from utils.MySqlHelper import MysqlDb
 class RdcUtilScripts(unittest.TestCase):
 
     def setUp(self):
-        token = "bearer e0620cac-c47a-4a1d-827c-bb7a346d1410"
+        token = "bearer c7ea1f38-84b2-4b09-8d27-74494144b089"
         self.server = RdcUtilServer(token=token)
 
-    def test_拉取个人任务(self):
+    def test_拉取任务(self):
         forms = '''
-e-archive-4521
+e-archive-4425
            '''
         for code in forms.splitlines():
             if code.startswith("e-archive"):
-                self.server.saveSubTask(code, taskTypeName="开发任务")
+                self.server.saveSubTask(code, taskTypeName="测试任务", associateName="孟庆宇")
 
-    def test_分配任务(self):
+    def test_分配任务主要负责人(self):
         # 格式 ## 任务号，前端，后端，测试，没有的用-
         tasks = '''
 e-archive-4032	-	孟庆宇	肖淙榕
@@ -74,7 +74,7 @@ e-archive-4614	林琛越	周海	刘亚丽
             if line.startswith("e-archive"):
                 self.server.saveTaskAssociateMember(line)
 
-    def test_items(self):
+    def 无用_个人测试用的(self):
         # print(self.server.queryTaskByCode("e-archive-4425"))
         # print(self.server.getTaskTypeId("开发任务"))
         # print(self.server.queryUser("刘亚丽"))
