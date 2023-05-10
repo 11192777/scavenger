@@ -21,9 +21,11 @@ def random_str(size):
         random_str += base_str[random.randint(0, length)]
     return random_str
 
+def current_time():
+    return random_time(par="%Y-%m-%d_%H:%M:%S")
 
-def random_time():
-    return str(datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f'))
+def random_time(par="%Y_%m_%d_%H_%M_%S_%f"):
+    return str(datetime.datetime.now().strftime(par))
 
 
 def randomStrArray(itemLen, size):

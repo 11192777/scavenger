@@ -15,6 +15,6 @@ suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.FormFieldTests))
 if __name__ == "__main__":
     runer = HTMLTestRunner(title="API_TESTS",
                            description="宇宝宝起飞啦",
-                           stream=open("./report/TestRunnerV2_{}.html".format(RandomUtils.random_time()), "wb"),
+                           stream=open("./report/TestRunnerV2_{}.html".format(RandomUtils.current_time()), "wb"),
                            verbosity=2, retry=2, save_last_try=True)
     runer.run(suite)
