@@ -712,11 +712,11 @@ tr[id^=st]  td { background-color: #6f6f6fa1 !important ; }
 
     REPORT_CLASS_TMPL = r"""
 <tr class='%(style)s'>
-    <td>%(desc)s</td>
-    <td>%(count)s</td>
-    <td>%(Pass)s</td>
-    <td>%(fail)s</td>
-    <td>%(error)s</td>
+    <td align="center">%(desc)s</td>
+    <td align="center">%(count)s</td>
+    <td align="center">%(Pass)s</td>
+    <td align="center">%(fail)s</td>
+    <td align="center">%(error)s</td>
     <td><a href="javascript:showClassDetail('%(cid)s',%(count)s)">详情</a></td>
     <td>&nbsp;</td>
 </tr>

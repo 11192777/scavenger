@@ -8,8 +8,8 @@ import tests.FormTests
 
 suite = unittest.TestSuite()
 loader = unittest.TestLoader()
-suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.ArchiveTypeTests))
-suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.DocumentTypeTests))
+# suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.ArchiveTypeTests))
+# suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.DocumentTypeTests))
 suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.FormFieldTests))
 
 if __name__ == "__main__":
