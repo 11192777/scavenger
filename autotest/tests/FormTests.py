@@ -7,7 +7,7 @@ from server.FormServer import FormServer
 
 import unittest
 
-from utils import ResponseUtil
+from utils import ResponseUtil, RandomUtils
 
 ENV = server.LoginServer.private_sit_16660000000()
 
