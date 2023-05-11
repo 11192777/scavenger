@@ -1,26 +1,22 @@
-import base64
-import json
 import unittest
 
-import requests
 
 from server.RdcUtilServer import RdcUtilServer
-from utils.MySqlHelper import MysqlDb
 
 
 class RdcUtilScripts(unittest.TestCase):
 
     def setUp(self):
-        token = "bearer c7ea1f38-84b2-4b09-8d27-74494144b089"
+        token = "bearer bc318b09-d366-4856-ab39-694397c4b454"
         self.server = RdcUtilServer(token=token)
 
     def test_拉取任务(self):
         forms = '''
-e-archive-4425
+e-archive-5069
            '''
         for code in forms.splitlines():
             if code.startswith("e-archive"):
-                self.server.saveSubTask(code, taskTypeName="测试任务", associateName="孟庆宇")
+                self.server.saveSubTask(code, taskTypeName="开发任务", associateName="孟庆宇")
 
     def test_分配任务主要负责人(self):
         # 格式 ## 任务号，前端，后端，测试，没有的用-

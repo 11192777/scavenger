@@ -48,7 +48,7 @@ class RdcUtilServer:
         taskInfo = self.queryTaskByCode(taskCode)
         if associateName:
             self.initMeInfoByUserName(associateName)
-        print(self.getMeName())
+        taskDetail = self.getTaskDetail(taskInfo["issueId"])
         subTask = {
             "summary": "【{}】".format(self.getMeName()) + str(taskInfo["summary"]),
             "projectId": taskInfo["projectId"],
@@ -63,7 +63,7 @@ class RdcUtilServer:
             "epicId": 0,
             "relateIssueId": 0,
             "componentIssueRelVOList": [],
-            "description": "",
+            "description": taskDetail["description"],
             "issueLinkCreateVOList": [],
             "labelIssueRelVOList": [],
             "versionIssueRelVOList": [],
@@ -142,3 +142,6 @@ class RdcUtilServer:
         }
         self.meInfo = meInfo
 
+    def getTaskDetail(self, taskId):
+        url = "https://c7n-api.huilianyi.com/agile/v1/projects/172811994888671232/issues/{}?organizationId=1&instanceProjectId=172811994888671232".format(taskId)
+        return requests.get(url=url, headers=self.headers, allow_redirects=False).json()
