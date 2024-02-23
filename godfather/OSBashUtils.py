@@ -49,7 +49,7 @@ def springRun(jar, active=None):
 
 def killProcess(pid):
     os.kill(pid, signal.SIGKILL)
-    yield f"data: ======> KILL PROCESS SUCCESSFULLY: {pid}"
+    return f"KILL PROCESS SUCCESSFULLY: {pid}"
 
 
 def getPid(port):
