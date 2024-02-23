@@ -2,6 +2,7 @@ import os
 import subprocess
 import logging
 import time
+import signal
 
 from utils import StringUtils
 
@@ -39,8 +40,20 @@ def gitPull(C):
 
 
 def springRun(jar, active=None):
-   cmd = "java -jar {active} {jar}".format(
-       active=active and "-Dspring.profiles.active={}".format(active) or "",
-       jar=jar
-   )
-   return cmdExecute(cmd)
+    cmd = "java -jar {active} {jar}".format(
+        active=active and "-Dspring.profiles.active={}".format(active) or "",
+        jar=jar
+    )
+    return cmdExecute(cmd)
+
+
+def killProcess(pid):
+    os.kill(pid, signal.SIGKILL)
+    print("已杀死pid为{pid}的进程")
+
+
+def getPid(port):
+    pid = os.popen("netstat -nlp | grep :%s | awk '{print $7}' | awk -F\" / \" '{ print $1 }'" % (
+        port)).read().split('/')[0]
+    return int(pid)
+

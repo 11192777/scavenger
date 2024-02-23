@@ -22,6 +22,7 @@ APPLICATION_TEXT = "application/txt"
 
 @app.route('/alice')
 def stream_response():
+
     return Response(stream_with_context(BatchExeHandle.aliceRebuild()), content_type='text/event-stream')
 
 
