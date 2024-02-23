@@ -55,5 +55,5 @@ def killProcess(pid):
 def getPid(port):
     cmd = os.popen("netstat -nlp | grep :%s | awk '{print $7}' | awk -F\" / \" '{ print $1 }'" % (
         port)).read()
-    pid = cmd.split('/')[0]
-    return {"pid": int(pid), "INFO": f"PROCESS_INFO:{cmd}"}
+    pid = cmd and cmd.split('/')[0] or ""
+    return {"pid": f"{pid}", "INFO": f"PROCESS_INFO:{cmd}"}
