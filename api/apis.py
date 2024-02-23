@@ -20,7 +20,7 @@ APPLICATION_JSON = "application/json;charset=UTF-8"
 APPLICATION_TEXT = "application/txt"
 
 
-@app.route('/stream')
+@app.route('/alice')
 def stream_response():
     return Response(stream_with_context(BatchExeHandle.aliceRebuild()), content_type='text/event-stream')
 

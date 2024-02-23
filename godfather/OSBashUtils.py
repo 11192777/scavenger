@@ -24,7 +24,7 @@ def cmdExecute(cmd):
         raise RuntimeError(stderr.decode())
 
 
-def mvnCleanInstall(f, settings, skipTests=True):
+def mvnCleanInstall(f=None, settings=None, skipTests=True):
     cmd = "mvn clean install {skipTests} {settings} {f}".format(
         skipTests=skipTests and "-DskipTests" or "",
         settings=settings and f"--settings {settings}" or "",
@@ -36,3 +36,11 @@ def mvnCleanInstall(f, settings, skipTests=True):
 def gitPull(C):
     cmd = "git {C} pull".format(C=C and f"-C {C}" or "")
     return cmdExecute(cmd)
+
+
+def springRun(jar, active=None):
+   cmd = "java -jar {active} {jar}".format(
+       active=active and "-Dspring.profiles.active={}".format(active) or "",
+       jar=jar
+   )
+   return cmdExecute(cmd)
