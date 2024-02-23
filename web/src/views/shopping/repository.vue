@@ -1,0 +1,398 @@
+<template>
+  <div class="app-container">
+
+    <div class="filter-container">
+
+      <el-input :placeholder="'标题'" v-model="listQuery.title" style="width: 200px;" class="filter-item"/>
+      <el-select v-model="listQuery.type" :placeholder="'类型'" clearable class="filter-item" style="width: 230px">
+        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key"/>
+      </el-select>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search">搜索</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
+    </div>
+    <br>
+    <br>
+    <el-table
+      v-loading="listLoading"
+      :key="tableKey"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%;"
+      @sort-change="sortChange">
+      <el-table-column label="序号" width="70" align="center">
+        <template slot-scope="scope">
+          {{ (listQuery.page - 1) * listQuery.limit + scope.$index + 1 }}
+        </template>
+      </el-table-column>
+      <el-table-column :label="'商品名称'" prop="id" sortable="custom" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="'数量'" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.amount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="'价格'" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.price }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="'位置'" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.location }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="'备注'" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.remark }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="'所属超市'" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.marketName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'操作'" align="center" width="180" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button v-if="scope.row.status!='status'" size="mini" type="success" @click="handleModifyStatus(scope.row)">上架
+          </el-button>
+          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleUpdate(scope.row)">入库
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList"/>
+
+<!--  新增编辑界面  -->
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-form ref="dataForm" :model="this.goodsRepositoryEntity" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
+        <el-form-item v-if="dialogStatus!='status' && dialogStatus!='deleted'" :label="'所属超市'">
+          <el-select v-model="goodsRepositoryEntity.marketId" style="width: 280px" class="filter-item">
+            <el-option v-for="item in marketList" :key="item.id" :label="item.name" :value="item.id"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="dialogStatus!='deleted' && dialogStatus!='deleted'" :label="'商品名称'">
+          <el-input v-model="goodsRepositoryEntity.name"/>
+        </el-form-item>
+        <el-form-item v-if="dialogStatus!='status'" :label="'入库数量'" >
+          <el-input-number :min="1" v-model="goodsRepositoryEntity.amount"/>
+        </el-form-item>
+        <el-form-item v-if="dialogStatus=='status' && dialogStatus!='deleted'" :label="'上架数量'" >
+          <el-input-number :min="1" v-model="goodsRepositoryEntity.amount"/>
+        </el-form-item>
+        <el-form-item v-if="dialogStatus!='deleted'" :label="'商品价格'">
+          <el-input v-model="goodsRepositoryEntity.price" style="width: 60px;"/>
+        </el-form-item>
+        <el-form-item v-if="dialogStatus!='deleted'" :label="'商品位置'">
+          <el-input type="textarea" :rows="2" v-model="goodsRepositoryEntity.location"/>
+        </el-form-item>
+        <el-form-item v-if="dialogStatus=='status'" :label="'所属分类'" >
+          <el-select v-model="goodsRepositoryEntity.goodsClassId" style="width: 280px" class="filter-item">
+            <el-option v-for="item in goodsClassList" :key="item.id" :label="item.value" :value="item.id"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="dialogStatus!='deleted'" :label="'备注'">
+          <el-input type="textarea" :rows="10" v-model="goodsRepositoryEntity.remark"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" v-if="dialogStatus == 'create'" @click="createData()">确定</el-button>
+        <el-button type="primary" v-if="dialogStatus == 'deleted'" @click="updateData()">确定</el-button>
+        <el-button type="primary" v-if="dialogStatus == 'status'" @click="releaseData()">确定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
+      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
+        <el-table-column prop="key" label="Channel"/>
+        <el-table-column prop="pv" label="Pv"/>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogPvVisible = false">确定</el-button>
+      </span>
+    </el-dialog>
+
+  </div>
+</template>
+
+<script>
+import MarketApi from '@/api/market'
+import GoodsRepositoryApi from '@/api/goodsRepository'
+import waves from '@/directive/waves' // Waves directive
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Util from '@/utils/validate'
+import GoodsShowApi from '@/api/goodsShow'
+import GoodsClassApi from '@/api/goodsClass'
+
+const calendarTypeOptions = [
+  { key: 'CN', display_name: 'China' }
+]
+
+const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
+  acc[cur.key] = cur.display_name
+  return acc
+}, {})
+
+export default {
+
+  name: 'ComplexTable',
+  components: { Pagination },
+  directives: { waves },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        published: 'success',
+        draft: 'info',
+        deleted: 'danger'
+      }
+      return statusMap[status]
+    },
+    typeFilter(type) {
+      return calendarTypeKeyValue[type]
+    }
+  },
+  data() {
+    return {
+      tableKey: 0,
+      list: null,
+      marketList: null,
+      positionList: null,
+      goodsClassList: null,
+      total: 0,
+      listLoading: true,
+      goodsRepositoryEntity:{
+        id: null,
+        name: null,
+        amount: 0,
+        price: null,
+        remark: null,
+        location: null,
+        marketId: null,
+        repositoryId: null,
+        goodsClassId: null
+      },
+      listQuery: {
+        page: 1,
+        limit: 20,
+        importance: undefined,
+        title: undefined,
+        type: undefined
+      },
+      radio: true,
+      importanceOptions: [1, 2, 3],
+      calendarTypeOptions,
+      sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
+      statusOptions: ['published', 'draft', 'deleted'],
+      showReviewer: false,
+      dialogFormVisible: false,
+      dialogStatus: '',
+      textMap: {
+        update: 'Edit',
+        create: 'Create'
+      },
+      dialogPvVisible: false,
+      pvData: [],
+      rules: {
+        type: [{ required: true, message: 'type is required', trigger: 'change' }],
+        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
+        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+      },
+      downloadLoading: false
+    }
+  },
+  created() {
+    this.getList()
+    this.getMarketList(this.listQuery)
+    this.getGoodsClassList()
+  },
+  methods: {
+    getGoodsClassList(){
+      GoodsClassApi.getGoodsClassList({page: 0, limit: 1000}).then( res => {
+        this.goodsClassList = res.data
+      })
+    },
+    cropSuccess(resData) {
+      this.imagecropperShow = false
+      this.imagecropperKey = this.imagecropperKey + 1
+      this.image = resData.files.avatar
+    },
+    close() {
+      this.imagecropperShow = false
+    },
+    dropzoneS(file) {
+      console.log(file)
+      this.$message({ message: 'Upload success', type: 'success' })
+    },
+    dropzoneR(file) {
+      console.log(file)
+      this.$message({ message: 'Delete success', type: 'success' })
+    },
+    getMarketList(){
+      MarketApi.getMarketList(this.listQuery).then(res =>{
+        this.marketList = res.data
+      })
+    },
+    getList() {
+      this.listLoading = true
+      setTimeout(() => {
+        GoodsRepositoryApi.getGoodsRepositoryList(this.listQuery).then(response => {
+          this.list = response.data
+          this.total = response.total
+
+          // Just to simulate the time of the request
+          setTimeout(() => {
+            this.listLoading = false
+          })
+        })
+      })
+    },
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
+    },
+    handleModifyStatus(row) {
+      this.goodsRepositoryEntity.repositoryId = row.id
+      this.dialogStatus = 'status'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    sortChange(data) {
+      const { prop, order } = data
+      if (prop === 'id') {
+        this.sortByID(order)
+      }
+    },
+    sortByID(order) {
+      if (order === 'ascending') {
+        this.listQuery.sort = '+id'
+      } else {
+        this.listQuery.sort = '-id'
+      }
+      this.handleFilter()
+    },
+    resetTemp() {
+      this.goodsRepositoryEntity = {
+        id: null,
+        name: null,
+        amount: null,
+        price: null,
+        remark: null,
+        location: null,
+        marketId: null,
+        repositoryId: null,
+        goodsClassId: null
+      }
+    },
+    handleCreate() {
+      this.resetTemp()
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    createData() {
+
+      if (!Util.validateDouble(this.goodsRepositoryEntity.price)){
+        this.$notify({
+          title: '错误',
+          message: '请输入正确的价格',
+          type: 'error',
+          duration: 2000
+        })
+        return
+      }
+
+      GoodsRepositoryApi.createGoodsRepository(this.goodsRepositoryEntity).then(() =>{
+        this.dialogFormVisible = false
+        this.$notify({
+          title: '成功',
+          message: '创建成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.getList()
+      })
+    },
+    releaseData(){
+      if (!Util.validateDouble(this.goodsRepositoryEntity.price)){
+        this.$notify({
+          title: '错误',
+          message: '请输入正确的价格',
+          type: 'error',
+          duration: 2000
+        })
+        return
+      }
+
+      GoodsShowApi.createGoodsShow(this.goodsRepositoryEntity).then(() =>{
+        this.dialogFormVisible = false
+        this.$notify({
+          title: '成功',
+          message: '发布成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.getList()
+      })
+    },
+    handleUpdate(row) {
+      this.goodsRepositoryEntity.id = row.id
+      this.dialogStatus = 'deleted'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    updateData() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          GoodsRepositoryApi.updateData(this.goodsRepositoryEntity).then(() => {
+            this.dialogFormVisible = false
+            this.$notify({
+              title: '成功',
+              message: '入库成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.getList()
+          })
+        }
+      })
+    },
+    handleDelete(row) {
+      this.$notify({
+        title: '成功',
+        message: '删除成功',
+        type: 'success',
+        duration: 2000
+      })
+      const index = this.list.indexOf(row)
+      this.list.splice(index, 1)
+    },
+    handleFetchPv(pv) {
+      fetchPv(pv).then(response => {
+        this.pvData = response.data.pvData
+        this.dialogPvVisible = true
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j === 'timestamp') {
+          return parseTime(v[j])
+        } else {
+          return v[j]
+        }
+      }))
+    }
+  }
+}
+</script>

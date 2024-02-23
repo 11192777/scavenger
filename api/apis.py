@@ -1,9 +1,7 @@
 import json
-import logging
-import os
-import uuid
+import time
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response, stream_with_context
 from flask_cors import CORS
 
 from server import StaticFileServer
@@ -12,7 +10,7 @@ from server.OcrTemplateServer import OcrTemplateServer
 from server.StrUtilServer import StrUtilServer
 from server.FieldTemplateServer import FieldTemplate
 from server.SqlAdapterServer import SqlAdapterServer
-from config.setting import STATIC_RESOURCE_DIR
+from godfather import BatchExeHandle
 
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
@@ -20,6 +18,11 @@ CORS(app, resources=r'/*')
 
 APPLICATION_JSON = "application/json;charset=UTF-8"
 APPLICATION_TEXT = "application/txt"
+
+
+@app.route('/stream')
+def stream_response():
+    return Response(stream_with_context(BatchExeHandle.aliceRebuild()), content_type='text/event-stream')
 
 
 @app.route("/api/work_ticket/selector", methods=["get"])
@@ -81,7 +84,8 @@ def field_template_test():
 def attachmentUpload():
     file = request.files["file"]
     StaticFileServer.save(file)
-    return app.response_class(response=json.dumps({"status": "SUCCESS"}, ensure_ascii=False), status=200, mimetype=APPLICATION_JSON)
+    return app.response_class(response=json.dumps({"status": "SUCCESS"}, ensure_ascii=False), status=200,
+                              mimetype=APPLICATION_JSON)
 
 
 @app.route("/api/str_util/selector", methods=["get"])

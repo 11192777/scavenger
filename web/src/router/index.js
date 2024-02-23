@@ -56,25 +56,57 @@ export const constantRouterMap = [
         path: 'workTicket',
         name: 'workTicket',
         component: () => import('@/views/scripts/workTicket'),
-        meta: { title: '工单生成', icon: 'table' }
+        meta: {title: '工单生成', icon: 'table'}
       },
       {
         path: 'sqlAdapter',
         name: 'sqlAdapter',
         component: () => import('@/views/scripts/sqlAdapter'),
-        meta: { title: 'SQL转换', icon: 'table' }
+        meta: {title: 'SQL转换', icon: 'table'}
       },
       {
         path: 'strUtil',
         name: 'strUtil',
         component: () => import('@/views/scripts/stringUtil'),
-        meta: { title: '字符串转换', icon: 'table' }
+        meta: {title: '字符串转换', icon: 'table'}
       },
       {
         path: 'attachment/:id',
         name: 'attachment',
         component: () => import('@/views/scripts/attachment'),
-        meta: { title: '附件上传', icon: 'table', noCache: true },
+        meta: {title: '附件上传', icon: 'table', noCache: true},
+        hidden: true
+      },
+
+      {
+        path: 'market',
+        name: 'market',
+        component: () => import('@/views/shopping/market'),
+        meta: {title: '超市管理', icon: 'table'}
+      },
+      {
+        path: 'goodsClass',
+        name: 'goodsClass',
+        component: () => import('@/views/shopping/goodsClass'),
+        meta: {title: '商品分类', icon: 'table'}
+      },
+      {
+        path: 'repository',
+        name: 'repository',
+        component: () => import('@/views/shopping/repository'),
+        meta: {title: '商品管理', icon: 'table'}
+      },
+      {
+        path: 'show',
+        name: 'show',
+        component: () => import('@/views/shopping/show'),
+        meta: {title: '货架管理', icon: 'table'}
+      },
+      {
+        path: 'attachment/:id',
+        name: 'attachment',
+        component: () => import('@/views/shopping/attachment'),
+        meta: {title: '图片上传', icon: 'table', noCache: true},
         hidden: true
       }
     ]

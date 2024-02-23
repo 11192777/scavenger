@@ -1161,6 +1161,9 @@ class HTMLTestRunner(Template_mixin):
             uo = o
         if isinstance(e, str):
             # ue = unicode(e.encode('string_escape'))
+            print("--------------")
+            print(e)
+            print("--------------")
             if PY3K:
                 ue = e
             elif e.find("Error") != -1 or e.find("Exception") != -1:

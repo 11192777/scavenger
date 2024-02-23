@@ -89,7 +89,7 @@ class RdcUtilServer:
         for user in self.users:
             if user["name"] == userName:
                 return user["info"]
-        url = "https://c7n-api.huilianyi.com/iam/choerodon/v1/projects/172811994888671232/users/agile?param={}&page=0&size=50&enabled=true".format(userName)
+        url = "https://c7n-api.huilianyi.com/agile/v1/projects/172811994888671232/issues/users?param={}&page=0&size=50".format(userName)
         userInfo = requests.post(url=url, data=json.dumps([]), headers=self.headers, allow_redirects=False).json()["content"][0]
         self.users.append({"name": userName, "info": userInfo})
         return userInfo

@@ -100,3 +100,5 @@ def local_private_dev_11192777():
             "db": "e_archives_jxmobile"
         }}
 
+def embed_stage_166660000000():
+    return {}

@@ -1,9 +1,14 @@
-import os
-
-import socket
+def decimal_to_binary(decimal):
+    binary = ""
+    while decimal > 0:
+        binary = str(decimal & 1) + binary
+        decimal >>= 1
+    return binary
 
 if __name__ == '__main__':
-    # print("ss{}".format(os.environ.get("STATIC_RESOURCE_DIR")))
-    # print(socket.gethostbyname(socket.gethostname()))
-    str =  ["ER09417717", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "0331", "New information in the book", "xcr test URL attachment duplicate 02211112223", "test Attachment url "," Test first upload attachment "," Data number "," Test automatic update re-check integrity year "," lq test data "," 8888888888 "," $uuid "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "," 1 "]
-    print(len(str))
+    decimal_number = int(input("请输入一个十进制数: "))
+    binary_number = decimal_to_binary(decimal_number)
+    print("对应的二进制数为:", binary_number)
+
+
+

@@ -4,13 +4,15 @@ from lib.HTMLTestRunner_BAOBAO import HTMLTestRunner
 from utils import RandomUtils
 
 import tests.FormTests
-
+import tests.ApiSyncTests
+import tests.Tester
 
 suite = unittest.TestSuite()
 loader = unittest.TestLoader()
-suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.ArchiveTypeTests))
-suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.DocumentTypeTests))
-suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.FormFieldTests))
+# suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.ArchiveTypeTests))
+# suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.DocumentTypeTests))
+# suite.addTests(loader.loadTestsFromTestCase(tests.FormTests.FormFieldTests))
+suite.addTests(loader.loadTestsFromTestCase(tests.Tester.Tester))
 
 if __name__ == "__main__":
     runer = HTMLTestRunner(title="API_TESTS",
