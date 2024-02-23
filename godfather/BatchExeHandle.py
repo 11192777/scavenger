@@ -8,6 +8,7 @@ def aliceRebuild():
         homePath = os.environ.get("ALICE_HOME")
         pid = OSBashUtils.getPid("7077")
         if pid["pid"]:
+            print("PID INFO: " + str(pid["pid"]))
             yield "data: ======> {}\n\n".format(pid["INFO"])
             yield "data: ======> {}\n\n".format(OSBashUtils.killProcess(int(pid["pid"])))
         yield from OSBashUtils.gitPull(homePath)
