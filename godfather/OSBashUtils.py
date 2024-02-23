@@ -49,11 +49,12 @@ def springRun(jar, active=None):
 
 def killProcess(pid):
     os.kill(pid, signal.SIGKILL)
-    print("已杀死pid为{pid}的进程")
+    yield f"data: KILL PROCESS SUCCESSFULLY: {pid}"
 
 
 def getPid(port):
-    pid = os.popen("netstat -nlp | grep :%s | awk '{print $7}' | awk -F\" / \" '{ print $1 }'" % (
-        port)).read().split('/')[0]
+    cmd = os.popen("netstat -nlp | grep :%s | awk '{print $7}' | awk -F\" / \" '{ print $1 }'" % (
+        port)).read()
+    yield f"data: PROCESS_INFO:{cmd}\n\n"
+    pid = cmd.split('/')[0]
     return int(pid)
-

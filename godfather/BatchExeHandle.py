@@ -7,7 +7,6 @@ def aliceRebuild():
     try:
         homePath = os.environ.get("ALICE_HOME")
         pid = OSBashUtils.getPid("7077")
-        print("PID: " + str(pid))
         OSBashUtils.killProcess(pid)
         yield from OSBashUtils.gitPull(homePath)
         yield from OSBashUtils.mvnCleanInstall(f=homePath + "/alice-start/pom.xml")
