@@ -21,13 +21,13 @@ APPLICATION_TEXT = "application/txt"
 
 
 @app.route('/alice')
-def stream_response():
+def aliceBuild():
     return Response(stream_with_context(BatchExeHandle.aliceRebuild()),
                     content_type='text/event-stream')
 
 
 @app.route('/gq-project')
-def stream_response():
+def aliceWebBuild():
     return Response(stream_with_context(BatchExeHandle.aliceWebRebuild()),
                     content_type='text/event-stream')
 
