@@ -28,7 +28,7 @@ def stream_response():
 
 @app.route('/gq-project')
 def stream_response():
-    return Response(stream_with_context(BatchExeHandle.aliceRebuild()),
+    return Response(stream_with_context(BatchExeHandle.aliceWebRebuild()),
                     content_type='text/event-stream')
 
 
