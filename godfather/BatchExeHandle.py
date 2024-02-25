@@ -28,6 +28,7 @@ def aliceWebRebuild():
         if pid["pid"]:
             yield "data: ======> {}\n\n".format(pid["INFO"])
             yield "data: ======> {}\n\n".format(OSBashUtils.killProcess(int(pid["pid"])))
+        yield from OSBashUtils.gitPull(homePath)
         yield from OSBashUtils.pnpmInstall(homePath)
         yield from OSBashUtils.pnpmStart(homePath)
     except Exception as e:
