@@ -1,1 +1,2 @@
 export ALICE_HOME=/root/workspace/server/alice
+export ALICE_WEB_HOME=/root/workspace/server/alice-web

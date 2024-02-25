@@ -22,13 +22,20 @@ APPLICATION_TEXT = "application/txt"
 
 @app.route('/alice')
 def stream_response():
+    return Response(stream_with_context(BatchExeHandle.aliceRebuild()),
+                    content_type='text/event-stream')
 
-    return Response(stream_with_context(BatchExeHandle.aliceRebuild()), content_type='text/event-stream')
+
+@app.route('/gq-project')
+def stream_response():
+    return Response(stream_with_context(BatchExeHandle.aliceRebuild()),
+                    content_type='text/event-stream')
 
 
 @app.route("/api/work_ticket/selector", methods=["get"])
 def workTicketSelector():
-    return app.response_class(response=json.dumps(WorkTicketServer.apiSelector, ensure_ascii=False), status=200,
+    return app.response_class(response=json.dumps(WorkTicketServer.apiSelector, ensure_ascii=False),
+                              status=200,
                               mimetype=APPLICATION_JSON)
 
 
@@ -40,7 +47,8 @@ def workTicketExecute():
 
 @app.route("/api/field_template/selector", methods=["get"])
 def fieldTemplateSelector():
-    return app.response_class(response=json.dumps(FieldTemplate.apiSelector, ensure_ascii=False), status=200,
+    return app.response_class(response=json.dumps(FieldTemplate.apiSelector, ensure_ascii=False),
+                              status=200,
                               mimetype=APPLICATION_JSON)
 
 
@@ -52,53 +60,61 @@ def fieldTemplateExecute():
 
 @app.route("/api/ocr_template/selector", methods=["get"])
 def ocrTemplateSelector():
-    return app.response_class(response=json.dumps(OcrTemplateServer.apiSelector, ensure_ascii=False), status=200,
-                              mimetype=APPLICATION_JSON)
+    return app.response_class(
+        response=json.dumps(OcrTemplateServer.apiSelector, ensure_ascii=False), status=200,
+        mimetype=APPLICATION_JSON)
 
 
 @app.route("/api/ocr_template/execute", methods=["post"])
 def ocrTemplateExecute():
-    executor = OcrTemplateServer(content=request.data.decode('utf-8'), operator=request.args["type"])
+    executor = OcrTemplateServer(content=request.data.decode('utf-8'),
+                                 operator=request.args["type"])
     return app.response_class(response=executor.execute(), status=200, mimetype=APPLICATION_TEXT)
 
 
 @app.route("/api/sql_adapter/selector", methods=["get"])
 def sqlAdapterSelector():
-    return app.response_class(response=json.dumps(SqlAdapterServer.apiSelector, ensure_ascii=False), status=200,
+    return app.response_class(response=json.dumps(SqlAdapterServer.apiSelector, ensure_ascii=False),
+                              status=200,
                               mimetype=APPLICATION_JSON)
 
 
 @app.route("/api/sql_adapter/execute", methods=["post"])
 def sqlAdapterExecute():
     executor = SqlAdapterServer(request.args["type"], request.data.decode('utf-8'))
-    return app.response_class(response=json.dumps(executor.execute(), ensure_ascii=False), status=200,
+    return app.response_class(response=json.dumps(executor.execute(), ensure_ascii=False),
+                              status=200,
                               mimetype=APPLICATION_TEXT)
 
 
 @app.route("/filed_template/test", methods=["get", "post"])
 def field_template_test():
     field_template = FieldTemplate(content=request.data.decode('utf-8'))
-    return field_template.field_template_test(url=request.args.get("url"), token=request.headers.get("Authorization"))
+    return field_template.field_template_test(url=request.args.get("url"),
+                                              token=request.headers.get("Authorization"))
 
 
 @app.route("/api/attachment/upload", methods=["post"])
 def attachmentUpload():
     file = request.files["file"]
     StaticFileServer.save(file)
-    return app.response_class(response=json.dumps({"status": "SUCCESS"}, ensure_ascii=False), status=200,
+    return app.response_class(response=json.dumps({"status": "SUCCESS"}, ensure_ascii=False),
+                              status=200,
                               mimetype=APPLICATION_JSON)
 
 
 @app.route("/api/str_util/selector", methods=["get"])
 def strUtilSelector():
-    return app.response_class(response=json.dumps(StrUtilServer.apiSelector, ensure_ascii=False), status=200,
+    return app.response_class(response=json.dumps(StrUtilServer.apiSelector, ensure_ascii=False),
+                              status=200,
                               mimetype=APPLICATION_JSON)
 
 
 @app.route("/api/str_util/execute", methods=["post"])
 def strUtilExecute():
     executor = StrUtilServer(request.args["type"], request.data.decode('utf-8'))
-    return app.response_class(response=json.dumps(executor.execute(), ensure_ascii=False), status=200,
+    return app.response_class(response=json.dumps(executor.execute(), ensure_ascii=False),
+                              status=200,
                               mimetype=APPLICATION_TEXT)
 
 

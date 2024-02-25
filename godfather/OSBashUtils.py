@@ -57,3 +57,13 @@ def getPid(port):
         port)).read()
     pid = cmd and cmd.split('/')[0] or ""
     return {"pid": f"{pid}", "INFO": f"PROCESS_INFO:{cmd}"}
+
+
+def pnpmInstall(C):
+    cmd = "pnpm install {C}".format(C=C and "-C {}".format(C) or "")
+    return cmdExecute(cmd)
+
+
+def pnpmStart(dir):
+    cmd = "pnpm {dir} start".format(dir=dir and "--dir={}".format(dir) or "")
+    return cmdExecute(cmd)
