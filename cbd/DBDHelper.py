@@ -25,7 +25,7 @@ def getConfig():
     "|skg^0^BizDailyCollaboratingComponent|":{{
         "filters":[
             {{
-                "name":"filter",
+                "name":"filter",,
                 "type":"TableMultiFilter"
             }}
         ],
